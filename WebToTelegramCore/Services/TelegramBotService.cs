@@ -1,6 +1,9 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Options;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.Services
 {
@@ -15,23 +18,20 @@ namespace WebToTelegramCore.Services
         /// </summary>
         private readonly TelegramBotClient _client;
 
-        // TODO: move to config and load API token as well as our API endpoint for webhook
-        private const string _token = "some seecret token";
-
         /// <summary>
-        /// Constructor that also set up webhook.
+        /// Constructor that also sets up the webhook.
         /// </summary>
-        public TelegramBotService()
+        public TelegramBotService(IOptions<CommonOptions> options)
         {
-            _client = new TelegramBotClient(_token);
+            _client = new TelegramBotClient(options.Value.Token);
             // this code is dumb and single-threaded. _Maybe_ later
             // we can also probably set allowedUpdates to messages only
-            _client.SetWebhookAsync("API endpoint URL with token in it " +
-                "to make sure it's real update");
+            // also how do i test this
+            _client.SetWebhookAsync(options.Value.ApiEndpointUrl);
         }
 
         /// <summary>
-        /// Destructor that removes webhook.
+        /// Destructor that removes the webhook.
         /// </summary>
         ~TelegramBotService()
         {

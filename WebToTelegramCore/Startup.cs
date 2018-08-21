@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore
@@ -35,6 +36,11 @@ namespace WebToTelegramCore
                 ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
             services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
+
+            services.AddSingleton<ITelegramBotService, TelegramBotService>();
+
+            // Options pattern to the rescue?
+            services.Configure<CommonOptions>(Configuration.GetSection("General"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
