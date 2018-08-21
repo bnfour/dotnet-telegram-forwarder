@@ -20,7 +20,8 @@ namespace WebToTelegramCore.Controllers
         /// Handles web API calls.
         /// </summary>
         /// <param name="request">Request object in POST request body.</param>
-        /// <returns>400 Bad request on malformed Requests, 200 OK otherwise.</returns>
+        /// <returns>400 Bad request on malformed Requests,
+        /// 200 OK with corresponding Response otherwise.</returns>
         [HttpPost, Route("api")]
         public ActionResult<Response> HandleWebApi([FromBody] Request request)
         {

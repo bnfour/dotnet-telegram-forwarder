@@ -23,7 +23,8 @@ namespace WebToTelegramCore
 
         /// <summary>
         /// Sets model parameters: makes UsageCounter and LastSuccessTimestamp .NET-only
-        /// properties, marks token as a primary key.
+        /// properties, marks token as a primary key. Also explicitly set table name
+        /// to match actual DB file.
         /// </summary>
         /// <param name="modelBuilder">ModelBuilder to use.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
