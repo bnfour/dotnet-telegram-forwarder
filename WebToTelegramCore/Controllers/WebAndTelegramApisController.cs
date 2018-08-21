@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Data;
 
 namespace WebToTelegramCore.Controllers
 {
@@ -30,8 +31,7 @@ namespace WebToTelegramCore.Controllers
             }
             // accept and do nothing for now
             // TODO actually handle request via separate service
-            return new Response() { Ok = true, Code = 0, Details = "We're doing " +
-                "nothing right now!"};
+            return new Response(ResponseState.OkSent);
         }
 
         // TODO telegram API webhook handling
