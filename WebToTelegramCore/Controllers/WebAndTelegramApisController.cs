@@ -21,7 +21,7 @@ namespace WebToTelegramCore.Controllers
         /// <param name="request">Request object in POST request body.</param>
         /// <returns>400 Bad request on malformed Requests, 200 OK otherwise.</returns>
         [HttpPost, Route("api")]
-        public ActionResult HandleWebApi([FromBody] Request request)
+        public ActionResult<Response> HandleWebApi([FromBody] Request request)
         {
             // silently deny malformed requests
             if (!ModelState.IsValid)
@@ -30,8 +30,8 @@ namespace WebToTelegramCore.Controllers
             }
             // accept and do nothing for now
             // TODO actually handle request via separate service
-            // TODO return JSON response
-            return Ok();
+            return new Response() { Ok = true, Code = 0, Details = "We're doing " +
+                "nothing right now!"};
         }
 
         // TODO telegram API webhook handling
