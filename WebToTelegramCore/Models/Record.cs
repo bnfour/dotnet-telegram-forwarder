@@ -24,7 +24,7 @@ namespace WebToTelegramCore.Models
         /// <summary>
         /// ID of connected Telegram account.
         /// </summary>
-        public int AccountNumber { get; set; }
+        public long AccountNumber { get; set; }
 
         /// <summary>
         /// Backing field of UsageCounter property.

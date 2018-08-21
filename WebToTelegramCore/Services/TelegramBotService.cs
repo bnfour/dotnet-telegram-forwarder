@@ -25,6 +25,7 @@ namespace WebToTelegramCore.Services
         {
             _client = new TelegramBotClient(_token);
             // this code is dumb and single-threaded. _Maybe_ later
+            // we can also probably set allowedUpdates to messages only
             _client.SetWebhookAsync("API endpoint URL with token in it " +
                 "to make sure it's real update");
         }
@@ -42,10 +43,9 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="message">Markdown-formatted message.</param>
-        public void Send(int accountId, string message)
+        public void Send(long accountId, string message)
         {
             // I think we have to promote account ID back to ID of chat with this bot
-            // TODO: convert argument and account ID elsewhere to long
             var chatId = new ChatId(accountId);
             _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown);
         }

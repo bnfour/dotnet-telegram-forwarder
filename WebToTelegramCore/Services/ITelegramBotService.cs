@@ -11,6 +11,6 @@
         /// </summary>
         /// <param name="accountId">ID of account to send message to.</param>
         /// <param name="message">Text of the message.</param>
-        void Send(int accountId, string message);
+        void Send(long accountId, string message);
     }
 }
