@@ -1,4 +1,5 @@
 ﻿using System;
+using WebToTelegramCore.Data;
 
 namespace WebToTelegramCore.Models
 {
@@ -60,12 +61,19 @@ namespace WebToTelegramCore.Models
         public DateTime LastSuccessTimestamp { get; set; }
 
         /// <summary>
+        /// Field to store whether this Record awaits user confirmation
+        /// on destructive command.
+        /// </summary>
+        public RecordState State { get; set; }
+
+        /// <summary>
         /// Constructor that sets up default values for properties not stored in the DB.
         /// </summary>
         public Record()
         {
             _counter = _counterMax;
             LastSuccessTimestamp = DateTime.Now;
+            State = RecordState.Normal;
         }
     }
 }
