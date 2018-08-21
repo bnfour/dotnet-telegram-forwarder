@@ -36,7 +36,7 @@ namespace WebToTelegramCore.Services
             // sanity check for random evenness
             if (256 % _alphabet.Length != 0)
             {
-                throw new ApplicationException("Selected alphabet does not map evenly" +
+                throw new ApplicationException("Selected alphabet does not map evenly " +
                     "to bytes value. Consider alphabet length that is a divider of 256.");
             }
         }
