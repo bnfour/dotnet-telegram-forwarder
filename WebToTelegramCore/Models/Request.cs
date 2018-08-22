@@ -14,7 +14,7 @@ namespace WebToTelegramCore.Models
         public string Token { get; set; }
 
         /// <summary>
-        /// Message to send. Max size is hardcoded to 8 KB.
+        /// Message to send. Max size is hardcoded to 8192 chars.
         /// </summary>
         [Required, StringLength(8192)]
         public string Message { get; set; }
