@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Data;
+using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore.Controllers
 {
@@ -15,6 +15,20 @@ namespace WebToTelegramCore.Controllers
     /// </summary>
     public class WebAndTelegramApisController : Controller
     {
+        /// <summary>
+        /// Field to store injected web API service.
+        /// </summary>
+        private IOwnApiService _ownApi;
+
+        /// <summary>
+        /// Constructor with dependency injection.
+        /// </summary>
+        /// <param name="ownApi">Web API service instance to use.</param>
+        public WebAndTelegramApisController(IOwnApiService ownApi)
+        {
+            _ownApi = ownApi;
+        }
+
         // POST /api
         /// <summary>
         /// Handles web API calls.
@@ -30,9 +44,7 @@ namespace WebToTelegramCore.Controllers
             {
                 return BadRequest();
             }
-            // accept and do nothing for now
-            // TODO actually handle request via separate service
-            return new Response(ResponseState.OkSent);
+            return _ownApi.HandleRequest(request);
         }
 
         // TODO telegram API webhook handling

@@ -39,6 +39,8 @@ namespace WebToTelegramCore
 
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
 
+            services.AddScoped<IOwnApiService, OwnApiService>();
+
             // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
         }
