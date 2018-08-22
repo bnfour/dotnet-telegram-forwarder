@@ -14,6 +14,8 @@ using Microsoft.Extensions.Options;
 using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
+using Record = WebToTelegramCore.Models.Record;
+
 namespace WebToTelegramCore
 {
     public class Startup
@@ -43,6 +45,12 @@ namespace WebToTelegramCore
 
             // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
+            services.Configure<BandwidthOptions>(Configuration.GetSection("Bandwidth"));
+            // loading this explicitly as there's no straightforward way to pass options
+            // to models; I can be wrong though
+            // TODO: see if there's a better way
+            var preload = Configuration.GetSection("Bandwidth").GetValue<int>("InitialCount");
+            Record.SetMaxValue(preload);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

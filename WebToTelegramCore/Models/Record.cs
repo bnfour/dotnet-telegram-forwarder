@@ -14,7 +14,12 @@ namespace WebToTelegramCore.Models
         /// <summary>
         /// Maximum possible amount of messages available immidiately.
         /// </summary>
-        private static int _counterMax = 20;
+        private static int _counterMax;
+
+        /// <summary>
+        /// Boolean indicating whether max value from config was set.
+        /// </summary>
+        private static bool _maxSet = false;
 
         /// <summary>
         /// Auth token associated with this record. Primary key in the DB.
@@ -71,9 +76,31 @@ namespace WebToTelegramCore.Models
         /// </summary>
         public Record()
         {
+            if (!_maxSet)
+            {
+                throw new ApplicationException("No default maximum count value was set.");
+            }
             _counter = _counterMax;
             LastSuccessTimestamp = DateTime.Now;
             State = RecordState.Normal;
+        }
+
+        /// <summary>
+        /// Sets maximum value once. Throws exception when value is already set.
+        /// </summary>
+        /// <param name="value">Value to set.</param>
+        public static void SetMaxValue(int value)
+        {
+            if (!_maxSet)
+            {
+                _counterMax = value;
+                _maxSet = true;
+            }
+            else
+            {
+                throw new ApplicationException("Record's maximum count value " +
+                    "was already set.");
+            }
         }
     }
 }

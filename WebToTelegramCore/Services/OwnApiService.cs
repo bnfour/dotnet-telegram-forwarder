@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
 
 using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.Services
 {
@@ -11,11 +13,10 @@ namespace WebToTelegramCore.Services
     /// </summary>
     public class OwnApiService : IOwnApiService
     {
-        // TODO: move to config along with maximum value of counter
         /// <summary>
         /// Amount of seconds lince last successful API call to regenerate counter.
         /// </summary>
-        private static int _secondsPerRegen = 60;
+        private readonly int _secondsPerRegen;
 
         /// <summary>
         /// Field to store app's database context.
@@ -32,10 +33,14 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service to use.</param>
-        public OwnApiService(RecordContext context, ITelegramBotService bot)
+        /// <param name="options">Bandwidth options.</param>
+        public OwnApiService(RecordContext context, ITelegramBotService bot,
+            IOptions<BandwidthOptions> options)
         {
             _context = context;
             _bot = bot;
+
+            _secondsPerRegen = options.Value.SecondsPerRegeneration;
         }
 
         /// <summary>
