@@ -15,7 +15,7 @@ namespace WebToTelegramCore.BotCommands
         string Command { get; }
 
         /// <summary>
-        /// 
+        /// Method to process received message.
         /// </summary>
         /// <param name="record">Record associated with user who sent teh command,
         /// or null if user has no Record (have not received the token).</param>
