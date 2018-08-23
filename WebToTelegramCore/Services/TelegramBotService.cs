@@ -36,8 +36,10 @@ namespace WebToTelegramCore.Services
         public TelegramBotService(IOptions<CommonOptions> options)
         {
             _client = new TelegramBotClient(options.Value.Token);
+
+            var webhookUrl = options.Value.ApiEndpointUrl + "/" + options.Value.Token;
             // this code is dumb and single-threaded. _Maybe_ later
-            _client.SetWebhookAsync(options.Value.ApiEndpointUrl,
+            _client.SetWebhookAsync(webhookUrl,
                 allowedUpdates: new[] { UpdateType.Message });
         }
 
