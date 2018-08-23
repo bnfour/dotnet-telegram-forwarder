@@ -2,6 +2,9 @@
 
 namespace WebToTelegramCore.BotCommands
 {
+    /// <summary>
+    /// Class that implements /start command.
+    /// </summary>
     public class StartCommand : BotCommandBase, IBotCommand
     {
         // TODO: move to config
@@ -40,9 +43,10 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/start";
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
-        /// <param name="registrationEnabled"></param>
+        /// <param name="registrationEnabled">Boolean indicating whether registration
+        /// is enabled (true) or not.</param>
         public StartCommand(bool registrationEnabled)
         {
             _isRegistrationOpen = registrationEnabled;
