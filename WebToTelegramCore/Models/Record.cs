@@ -9,8 +9,6 @@ namespace WebToTelegramCore.Models
     /// </summary>
     public class Record
     {
-        // TODO: make this configurable, hence static, not const
-
         /// <summary>
         /// Maximum possible amount of messages available immidiately.
         /// </summary>
