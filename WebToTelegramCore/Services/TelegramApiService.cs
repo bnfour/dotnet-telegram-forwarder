@@ -37,6 +37,11 @@ namespace WebToTelegramCore.Services
         private readonly List<IBotCommand> _commands;
 
         /// <summary>
+        /// Indicates whether usage of /create command is enabled.
+        /// </summary>
+        private bool _isRegistrationOpen;
+
+        /// <summary>
         /// Constructor that injects dependencies and configures list of commands.
         /// </summary>
         /// <param name="options">Options that include token.</param>
@@ -48,6 +53,8 @@ namespace WebToTelegramCore.Services
             _token = options.Value.Token;
             _context = context;
             _bot = bot;
+
+            _isRegistrationOpen = options.Value.RegistrationEnabled;
 
             _commands = new List<IBotCommand>()
             {
