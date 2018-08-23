@@ -37,9 +37,8 @@ namespace WebToTelegramCore.Services
         {
             _client = new TelegramBotClient(options.Value.Token);
             // this code is dumb and single-threaded. _Maybe_ later
-            // we can also probably set allowedUpdates to messages only
-            // also how do i test this
-            _client.SetWebhookAsync(options.Value.ApiEndpointUrl);
+            _client.SetWebhookAsync(options.Value.ApiEndpointUrl,
+                allowedUpdates: new[] { UpdateType.Message });
         }
 
         /// <summary>

@@ -38,10 +38,10 @@ namespace WebToTelegramCore
                 ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
             services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
-
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
 
             services.AddScoped<IOwnApiService, OwnApiService>();
+            services.AddScoped<ITelegramApiService, TelegramApiService>();
 
             // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));

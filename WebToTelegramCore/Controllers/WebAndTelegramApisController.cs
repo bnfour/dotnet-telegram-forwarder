@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Telegram.Bot.Types;
 
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Services;
@@ -21,12 +22,20 @@ namespace WebToTelegramCore.Controllers
         private IOwnApiService _ownApi;
 
         /// <summary>
+        /// Field to store injected Telegram API service.
+        /// </summary>
+        private ITelegramApiService _tgApi;
+
+        /// <summary>
         /// Constructor with dependency injection.
         /// </summary>
         /// <param name="ownApi">Web API service instance to use.</param>
-        public WebAndTelegramApisController(IOwnApiService ownApi)
+        /// <param name="tgApi">Telegram API service instance to use.</param>
+        public WebAndTelegramApisController(IOwnApiService ownApi,
+            ITelegramApiService tgApi)
         {
             _ownApi = ownApi;
+            _tgApi = tgApi;
         }
 
         // POST /api
@@ -47,6 +56,23 @@ namespace WebToTelegramCore.Controllers
             return _ownApi.HandleRequest(request);
         }
 
-        // TODO telegram API webhook handling
+        // POST /api/{bot token}
+        /// <summary>
+        /// Handles webhook calls.
+        /// </summary>
+        /// <param name="token">Token which is used as part of endpoint url
+        /// to verify request's origin.</param>
+        /// <param name="update">Update to handle.</param>
+        /// <returns>400 Bad Request on wrong tokens, 200 OK otherwise.</returns>
+        [HttpPost, Route("api/{token}")]
+        public ActionResult HandleTelegramApi(string token, [FromBody] Update update)
+        {
+            if (!_tgApi.IsToken(token))
+            {
+                return BadRequest();
+            }
+            _tgApi.HandleUpdate(update);
+            return Ok();
+        }
     }
 }
