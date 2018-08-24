@@ -14,9 +14,10 @@ namespace WebToTelegramCore.Models
         public string Token { get; set; }
 
         /// <summary>
-        /// Message to send. Max size is hardcoded to 8192 chars.
+        /// Message to send. Max size is hardcoded to 4096 chars,
+        /// same as Telegram's maximum length of a single message.
         /// </summary>
-        [Required, StringLength(8192)]
+        [Required, StringLength(4096)]
         public string Message { get; set; }
     }
 }
