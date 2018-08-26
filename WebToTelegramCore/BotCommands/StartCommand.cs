@@ -24,7 +24,7 @@ namespace WebToTelegramCore.BotCommands
         /// Additional text to display when registration is open.
         /// </summary>
         private const string _registrationHint = "If that does not stop you, " +
-            "you can create your own API token with `/create` command.";
+            "you can create your own API token with /create command.";
 
         /// <summary>
         /// Additional text to display when registration is closed.
@@ -35,7 +35,7 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Field to store current state of registartion of new users.
         /// </summary>
-        private bool _isRegistrationOpen;
+        private readonly bool _isRegistrationOpen;
 
         /// <summary>
         /// Command's text.
