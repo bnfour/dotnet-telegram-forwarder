@@ -52,6 +52,17 @@ namespace WebToTelegramCore.Services
         private readonly bool _isRegistrationOpen;
 
         /// <summary>
+        /// Message to reply with when input is starting with slash, but none of the
+        /// commands fired in response.
+        /// </summary>
+        private readonly string _invalidCommandReply;
+
+        /// <summary>
+        /// Message to reply with when input isn't even resembles a command.
+        /// </summary>
+        private readonly string _invalidReply;
+
+        /// <summary>
         /// Constructor that injects dependencies and configures list of commands.
         /// </summary>
         /// <param name="options">Options that include token.</param>
@@ -71,6 +82,9 @@ namespace WebToTelegramCore.Services
             _isRegistrationOpen = options.Value.RegistrationEnabled;
 
             LocalizationOptions locOptions = locale.Value;
+
+            _invalidCommandReply = locOptions.ErrorDave;
+            _invalidReply = locOptions.ErrorWhat;
 
             _commands = new List<IBotCommand>()
             {
@@ -185,17 +199,8 @@ namespace WebToTelegramCore.Services
             }
             else
             {
-                string reply;
-                // if it looks like a command, pretend we're HAL 9000
-                // TODO: move these strings to config
-                if (text.StartsWith("/"))
-                {
-                    reply = "I'm afraid I can't let you do that.";
-                }
-                else
-                {
-                    reply = "Unfortunately, I'm not sure how to interpret this. 🤔";
-                }
+                string reply = text.StartsWith("/") ?
+                    _invalidCommandReply : _invalidReply;
                 _bot.Send(accountId, reply);
             }
         }
