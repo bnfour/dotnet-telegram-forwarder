@@ -49,15 +49,18 @@ namespace WebToTelegramCore.Services
         /// <summary>
         /// Indicates whether usage of /create command is enabled.
         /// </summary>
-        private bool _isRegistrationOpen;
+        private readonly bool _isRegistrationOpen;
 
         /// <summary>
         /// Constructor that injects dependencies and configures list of commands.
         /// </summary>
         /// <param name="options">Options that include token.</param>
+        /// <param name="locale">Localization options.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service instance to use.</param>
-        public TelegramApiService(IOptions<CommonOptions> options, RecordContext context,
+        /// <param name="generator">Token generator service to use.</param>
+        public TelegramApiService(IOptions<CommonOptions> options, 
+            IOptions<LocalizationOptions> locale, RecordContext context,
             ITelegramBotService bot, ITokenGeneratorService generator)
         {
             _token = options.Value.Token;
@@ -67,19 +70,21 @@ namespace WebToTelegramCore.Services
 
             _isRegistrationOpen = options.Value.RegistrationEnabled;
 
+            LocalizationOptions locOptions = locale.Value;
+
             _commands = new List<IBotCommand>()
             {
-                new StartCommand(_isRegistrationOpen),
-                new TokenCommand(options.Value.ApiEndpointUrl),
-                new RegenerateCommand(),
-                new DeleteCommand(_isRegistrationOpen),
-                new ConfirmCommand(_context, _generator),
-                new CancelCommand(),
-                new HelpCommand(),
-                new DirectiveCommand()
+                new StartCommand(locOptions, _isRegistrationOpen),
+                new TokenCommand(locOptions, options.Value.ApiEndpointUrl),
+                new RegenerateCommand(locOptions),
+                new DeleteCommand(locOptions, _isRegistrationOpen),
+                new ConfirmCommand(locOptions, _context, _generator),
+                new CancelCommand(locOptions),
+                new HelpCommand(locOptions),
+                new DirectiveCommand(locOptions)
 
             };
-            _thatOneCommand = new CreateCommand(_context, _generator,
+            _thatOneCommand = new CreateCommand(locOptions, _context, _generator,
                 _isRegistrationOpen);
         }
 

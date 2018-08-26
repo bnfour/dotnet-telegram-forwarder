@@ -1,5 +1,6 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -8,21 +9,30 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public class CancelCommand : ConfirmationCommandBase, IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Reply text when deletion was cancelled.
         /// </summary>
-        private const string _deletionCancel = "Token deletion cancelled.";
+        private readonly string _deletionCancel;
 
         /// <summary>
         /// Reply text when regeneration was cancelled.
         /// </summary>
-        private const string _regenerationCancel = "Token regeneration cancelled.";
+        private readonly string _regenerationCancel;
 
         /// <summary>
         /// Command's text.
         /// </summary>
         public override string Command => "/cancel";
+
+        /// <summary>
+        /// Constructor that sets error message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public CancelCommand(LocalizationOptions locale) : base(locale)
+        {
+            _deletionCancel = locale.CancelDeletion;
+            _regenerationCancel = locale.CancelRegeneration;
+        }
 
         /// <summary>
         /// Method to process the command. Resets Record's State back to Normal.

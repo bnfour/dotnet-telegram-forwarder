@@ -1,4 +1,5 @@
 ﻿using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -12,11 +13,19 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         public override string Command => "/help";
 
-        //TODO: move to config
         /// <summary>
         /// Helpful help message to send.
         /// </summary>
-        private const string _message = "*TODO:* write something meaningful here 🤔";
+        private readonly string _message;
+
+        /// <summary>
+        /// Constructor that sets up message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public HelpCommand(LocalizationOptions locale) : base(locale)
+        {
+            _message = locale.Help;
+        }
 
         /// <summary>
         /// Method to process the command.

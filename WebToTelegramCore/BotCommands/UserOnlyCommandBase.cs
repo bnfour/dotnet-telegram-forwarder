@@ -1,4 +1,5 @@
 ﻿using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -8,13 +9,17 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public abstract class UserOnlyCommandBase : BotCommandBase, IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Text somewhat explaining why processing of this Record
         /// was cancelled in this class.
         /// </summary>
-        private const string _error = "In order to use this command, you must have " +
-            "a token associated with your account. Try running /create first.";
+        private readonly string _error;
+
+
+        public UserOnlyCommandBase(LocalizationOptions locale) : base(locale)
+        {
+            _error = locale.ErrorMustBeUser;
+        }
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users

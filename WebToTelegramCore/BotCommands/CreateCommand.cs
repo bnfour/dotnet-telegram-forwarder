@@ -1,5 +1,6 @@
 ﻿using System;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore.BotCommands
@@ -14,18 +15,15 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         public override string Command => "/create";
 
-        //TODO: move to config
         /// <summary>
         /// Message to display on token creation. Must be formatted, {0} is token.
         /// </summary>
-        private const string _message = "Success! Your token is:\n\n`{0}`\n\n" +
-            "Please consult /token and /help command for usage.";
+        private readonly string _message;
 
         /// <summary>
         /// Message to display when registration is off.
         /// </summary>
-        private const string _goAway = "This instance of bot is not accepting new users" +
-            " for now.";
+        private readonly string _goAway;
 
         /// <summary>
         /// Field to store database context reference.
@@ -55,15 +53,19 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor that injects dependencies and sets up registration state.
         /// </summary>
+        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator service to use.</param>
         /// <param name="isRegistrationEnabled">State of registration.</param>
-        public CreateCommand(RecordContext context, ITokenGeneratorService generator,
-            bool isRegistrationEnabled)
+        public CreateCommand(LocalizationOptions locale, RecordContext context,
+            ITokenGeneratorService generator, bool isRegistrationEnabled) : base(locale)
         {
             _context = context;
             _generator = generator;
             _isRegistrationEnabled = isRegistrationEnabled;
+
+            _message = locale.CreateSuccess;
+            _goAway = locale.CreateGoAway;
         }
 
         /// <summary>

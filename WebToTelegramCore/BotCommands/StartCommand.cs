@@ -1,4 +1,5 @@
 ﻿using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -7,30 +8,20 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public class StartCommand : BotCommandBase, IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Fisrt part of response to the command which is always displayed.
         /// </summary>
-        private const string _startMessage = "Hello!\n\n" +
-            "This bot provides a standalone web API to relay messages from whatever " +
-            "you'll use it from to Telegram as messages from the bot." +
-            "It might come in handy to unify your notifications in one place.\n\n" +
-            "*Please note*: this requires some external tools. If you consider " +
-            "phrases like \"Send a POST request to the endpoint with JSON body " +
-            "with two string fields\" a magic gibberish you don't understand, " +
-            "this bot probably isn't much of use to you.";
+        private readonly string _startMessage;
 
         /// <summary>
         /// Additional text to display when registration is open.
         /// </summary>
-        private const string _registrationHint = "If that does not stop you, " +
-            "you can create your own API token with /create command.";
+        private readonly string _registrationHint;
 
         /// <summary>
         /// Additional text to display when registration is closed.
         /// </summary>
-        private const string _noRegistration = "Sorry, this instance of bot is not " +
-            "accepting new users for now.";
+        private readonly string _noRegistration;
 
         /// <summary>
         /// Field to store current state of registartion of new users.
@@ -45,11 +36,17 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="locale">Locale options to use.</param>
         /// <param name="registrationEnabled">Boolean indicating whether registration
         /// is enabled (true) or not.</param>
-        public StartCommand(bool registrationEnabled)
+        public StartCommand(LocalizationOptions locale, bool registrationEnabled)
+            : base(locale)
         {
             _isRegistrationOpen = registrationEnabled;
+
+            _startMessage = locale.StartMessage;
+            _noRegistration = locale.StartGoAway;
+            _registrationHint = locale.StartRegistrationHint;
         }
 
         /// <summary>

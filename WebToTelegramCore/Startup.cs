@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
@@ -46,6 +40,7 @@ namespace WebToTelegramCore
             // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
             services.Configure<BandwidthOptions>(Configuration.GetSection("Bandwidth"));
+            services.Configure<LocalizationOptions>(Configuration.GetSection("Strings"));
             // loading this explicitly as there's no straightforward way to pass options
             // to models; I can be wrong though
             // TODO: see if there's a better way

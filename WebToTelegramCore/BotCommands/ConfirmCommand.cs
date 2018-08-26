@@ -1,6 +1,7 @@
 ﻿using System;
 using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore.BotCommands
@@ -11,18 +12,16 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public class ConfirmCommand : ConfirmationCommandBase, IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Message to display when token is deleted.
         /// </summary>
-        private const string _deletion = "Token deleted. Thank you for using our service!";
+        private readonly string _deletion;
 
         /// <summary>
         /// Format string for message about token regeneration. The only argument {0}
         /// is a newly generated token.
         /// </summary>
-        private const string _regenration = "Your new token is\n\n`{0}`\n\nDon't forget" +
-            " to update your clients.";
+        private readonly string _regenration;
 
         /// <summary>
         /// Command's text.
@@ -42,12 +41,17 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator to use.</param>
-        public ConfirmCommand(RecordContext context, ITokenGeneratorService generator)
+        public ConfirmCommand(LocalizationOptions locale, RecordContext context,
+            ITokenGeneratorService generator) : base(locale)
         {
             _context = context;
             _tokenGenerator = generator;
+
+            _deletion = locale.ConfirmDeletion;
+            _regenration = locale.ConfirmRegeneration;
         }
 
         /// <summary>

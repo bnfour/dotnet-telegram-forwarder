@@ -1,5 +1,6 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -14,19 +15,15 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         public override string Command => "/delete";
 
-        // TODO: move to config
         /// <summary>
         /// Message that confirms deletion is now pending.
         /// </summary>
-        private const string _message = "*Token deletion pending!*\n\nPlease /confirm " +
-            "or /cancel it. It cannot be undone.\nIf you need to change your token, " +
-            "please consider to /regenerate it instead of deleting and recreating it.";
+        private readonly string _message;
 
         /// <summary>
         /// Additional warning shown when registration is turned off.
         /// </summary>
-        private const string _noTurningBack = "This bot has registration turned *off*. " +
-            "You won't be able to create new token. Please be certain.";
+        private readonly string _noTurningBack;
 
         /// <summary>
         /// Boolean that indicates whether this instance is accepting new users.
@@ -37,10 +34,15 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="locale">Locale options to use.</param>
         /// <param name="registrationEnabled">Registration state. True is enabled.</param>
-        public DeleteCommand(bool registrationEnabled)
+        public DeleteCommand(LocalizationOptions locale, bool registrationEnabled)
+            : base(locale)
         {
             _registrationEnabled = registrationEnabled;
+
+            _message = locale.DeletionPending;
+            _noTurningBack = locale.DeletionNoTurningBack;
         }
 
         /// <summary>

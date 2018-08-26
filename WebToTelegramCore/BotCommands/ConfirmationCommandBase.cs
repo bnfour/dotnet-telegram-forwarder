@@ -1,5 +1,6 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -10,18 +11,25 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public abstract class ConfirmationCommandBase : IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Text somewhat explaining why processing of this Record
         /// was cancelled in this class.
         /// </summary>
-        private const string _error = "This command is only usable when you have " +
-            "initiated a token deletion /delete or regeneration /regenerate.";
+        private readonly string _error;
 
         /// <summary>
         /// Command text; not implemented in abstract classes.
         /// </summary>
         public abstract string Command { get; }
+
+        /// <summary>
+        /// Constructor that sets error message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public ConfirmationCommandBase(LocalizationOptions locale)
+        {
+            _error = locale.ErrorNoConfirmationPending;
+        }
 
         /// <summary>
         /// Method of abstract base class that filters out users without pending

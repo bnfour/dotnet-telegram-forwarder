@@ -1,5 +1,6 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -14,12 +15,19 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         public override string Command => "/regenerate";
 
-        // TODO: move to config
         /// <summary>
         /// Message that confirms regeneration is now pending.
         /// </summary>
-        private const string _message = "*Token regenration pending!*\n\nPlease /confirm " +
-            "or /cancel it. It cannot be undone. Please be certain.";
+        private readonly string _message;
+
+        /// <summary>
+        /// Constructor that sets up message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public RegenerateCommand(LocalizationOptions locale) : base(locale)
+        {
+            _message = locale.RegenerationPending;
+        }
 
         /// <summary>
         /// Method to process the command.

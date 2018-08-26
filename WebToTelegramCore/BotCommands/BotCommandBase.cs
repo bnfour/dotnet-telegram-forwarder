@@ -1,5 +1,6 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -9,18 +10,25 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public abstract class BotCommandBase : IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Text somewhat explaining why processing of this Record
         /// was cancelled in this class.
         /// </summary>
-        private const string _error = "You have an operation pending cancellation. " +
-            "Please confirm or cancel it before using other commands.";
+        private readonly string _error;
 
         /// <summary>
         /// Command text; not implemented in abstract classes.
         /// </summary>
         public abstract string Command { get; }
+
+        /// <summary>
+        /// Constructor that sets error message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public BotCommandBase(LocalizationOptions locale)
+        {
+            _error = locale.ErrorConfirmationPending;
+        }
 
         /// <summary>
         /// Method of abstract base class that filters out users with pending

@@ -1,4 +1,5 @@
 ﻿using WebToTelegramCore.Models;
+using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -8,14 +9,20 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public abstract class GuestOnlyCommandBase : BotCommandBase, IBotCommand
     {
-        // TODO: move to config
         /// <summary>
         /// Text somewhat explaining why processing of this Record
         /// was cancelled in this class.
         /// </summary>
-        private const string _error = "In order to use this command, you must have " +
-            "no token associated with your account. You can delete your existing one " +
-            "with /delete command, but why?";
+        private readonly string _error;
+
+        /// <summary>
+        /// Constructor that sets up error message.
+        /// </summary>
+        /// <param name="locale">Locale options to use.</param>
+        public GuestOnlyCommandBase(LocalizationOptions locale) : base(locale)
+        {
+            _error = locale.ErrorMustBeGuest;
+        }
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users
