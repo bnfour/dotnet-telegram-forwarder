@@ -21,8 +21,8 @@ namespace WebToTelegramCore.BotCommands
         /// Format string for message about token regeneration. The only argument {0}
         /// is a newly generated token.
         /// </summary>
-        private const string _regenration = "Your new token is `{0}`. Don't forget " +
-            "to update your clients.";
+        private const string _regenration = "Your new token is\n\n`{0}`\n\nDon't forget" +
+            " to update your clients.";
 
         /// <summary>
         /// Command's text.
