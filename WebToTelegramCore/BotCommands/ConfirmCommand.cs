@@ -81,8 +81,14 @@ namespace WebToTelegramCore.BotCommands
         private string Regenerate(Record record)
         {
             string newToken = _tokenGenerator.Generate();
-            record.Token = newToken;
-            record.State = RecordState.Normal;
+            // so apparently, primary key cannot be changed
+            Record newRecord = new Record()
+            {
+                AccountNumber = record.AccountNumber,
+                Token = newToken
+            };
+            _context.Remove(record);
+            _context.Add(newRecord);
             _context.SaveChanges();
             return String.Format(_regenration, newToken);
         }
