@@ -65,7 +65,7 @@ namespace WebToTelegramCore.Services
             // returning ResponseState.SomethingBadHappened in catch is silly
             // but how else API can be made "robust"?
             // TODO: think about role of ResponseState.SomethingBadHappened
-            var record = GetRecordByToken(request.Token);
+            var record = _context.GetRecordByToken(request.Token);
             if (record == null)
             {
                 return ResponseState.NoSuchToken;
@@ -82,25 +82,6 @@ namespace WebToTelegramCore.Services
             {
                 return ResponseState.BandwidthExceeded;
             }
-        }
-
-        /// <summary>
-        /// Tries to fetch record by token from underlying context.
-        /// </summary>
-        /// <param name="token">Token to search for in the DB.</param>
-        /// <returns>Associated Record or null if none found.</returns>
-        private Record GetRecordByToken(string token)
-        {
-            Record ret;
-            try
-            {
-                ret = _context.Records.Single(r => r.Token.Equals(token));
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
-            return ret;
         }
 
         /// <summary>

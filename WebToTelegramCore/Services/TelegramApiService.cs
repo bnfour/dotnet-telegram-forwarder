@@ -122,7 +122,7 @@ namespace WebToTelegramCore.Services
                 return;
             }
             // null check was done above, it's safe to use userId.Value directly
-            Record record = GetRecordByAccountId(userId.Value);
+            Record record = _context.GetRecordByAccountId(userId.Value);
 
             IBotCommand handler = null;
             if (text.StartsWith(_thatOneCommand.Command))
@@ -161,26 +161,6 @@ namespace WebToTelegramCore.Services
         public bool IsToken(string calledToken)
         {
             return calledToken.Equals(_token);
-        }
-
-        // TODO: move GetRecord* methods to context itself
-        /// <summary>
-        /// Gets Record associated with a given Telegram ID from the context.
-        /// </summary>
-        /// <param name="accountId">ID to search for.</param>
-        /// <returns>Associated Record or null if none present.</returns>
-        private Record GetRecordByAccountId(long accountId)
-        {
-            Record ret;
-            try
-            {
-                ret = _context.Records.Single(r => r.AccountNumber == accountId);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
-            return ret;
         }
 
         /// <summary>

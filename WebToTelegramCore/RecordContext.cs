@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 using WebToTelegramCore.Models;
 
@@ -35,6 +37,44 @@ namespace WebToTelegramCore
                 .Ignore(r => r.LastSuccessTimestamp)
                 .Ignore(r => r.State)
                 .HasKey(r => r.Token);
+        }
+
+        /// <summary>
+        /// Tries to fetch record by token from the database.
+        /// </summary>
+        /// <param name="token">Token to search for in the DB.</param>
+        /// <returns>Associated Record or null if none found.</returns>
+        public Record GetRecordByToken(string token)
+        {
+            Record ret;
+            try
+            {
+                ret = Records.Single(r => r.Token.Equals(token));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// Gets Record associated with a given Telegram ID from the database.
+        /// </summary>
+        /// <param name="accountId">ID to search for.</param>
+        /// <returns>Associated Record or null if none present.</returns>
+        public Record GetRecordByAccountId(long accountId)
+        {
+            Record ret;
+            try
+            {
+                ret = Records.Single(r => r.AccountNumber == accountId);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return ret;
         }
     }
 }
