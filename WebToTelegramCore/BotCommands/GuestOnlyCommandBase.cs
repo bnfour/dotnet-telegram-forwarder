@@ -15,7 +15,7 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         private const string _error = "In order to use this command, you must have " +
             "no token associated with your account. You can delete your existing one " +
-            "with `/delete` command, but why?";
+            "with /delete command, but why?";
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users
