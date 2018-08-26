@@ -7,6 +7,10 @@ Telegram bot is used to provide auth tokens to users and to actually notify them
 This can be used to deliver all kinds of notifications via Telegram.  
 Pretty much work in progress, no idea when (or even if ever) this will be finished.
 
+## Status
+Pretty much works in closed beta, main task now is to move hardcoded strings to config file, then write deployment instructions.  
+Also test what happens with malformed input.
+
 ## Description
 Let's try [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) this time. So this app consists of two parts: Telegram bot and a web API.
 
