@@ -14,7 +14,7 @@ namespace WebToTelegramCore.BotCommands
         /// was cancelled in this class.
         /// </summary>
         private const string _error = "In order to use this command, you must have " +
-            "a token associated with your account. Try running `/create` first.";
+            "a token associated with your account. Try running /create first.";
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users

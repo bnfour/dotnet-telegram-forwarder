@@ -16,7 +16,7 @@ namespace WebToTelegramCore.BotCommands
         /// was cancelled in this class.
         /// </summary>
         private const string _error = "This command is only usable when you have " +
-            "initiated a token deletion (`/delete`) or regeneration (`/regenerate`).";
+            "initiated a token deletion /delete or regeneration /regenerate.";
 
         /// <summary>
         /// Command text; not implemented in abstract classes.

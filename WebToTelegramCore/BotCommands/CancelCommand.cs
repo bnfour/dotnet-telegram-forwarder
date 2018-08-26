@@ -17,7 +17,7 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Reply text when regeneration was cancelled.
         /// </summary>
-        private const string _regenerationCancel = "Token regeneration cancelled";
+        private const string _regenerationCancel = "Token regeneration cancelled.";
 
         /// <summary>
         /// Command's text.
