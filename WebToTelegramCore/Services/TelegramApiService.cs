@@ -32,9 +32,19 @@ namespace WebToTelegramCore.Services
         private readonly ITelegramBotService _bot;
 
         /// <summary>
+        /// Reference to token generator service.
+        /// </summary>
+        private readonly ITokenGeneratorService _generator;
+
+        /// <summary>
         /// List of commands available to the bot.
         /// </summary>
         private readonly List<IBotCommand> _commands;
+
+        /// <summary>
+        /// /create handler, as it requires special treating since i'm bad at programming.
+        /// </summary>
+        private readonly CreateCommand _thatOneCommand;
 
         /// <summary>
         /// Indicates whether usage of /create command is enabled.
@@ -48,18 +58,29 @@ namespace WebToTelegramCore.Services
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service instance to use.</param>
         public TelegramApiService(IOptions<CommonOptions> options, RecordContext context,
-            ITelegramBotService bot)
+            ITelegramBotService bot, ITokenGeneratorService generator)
         {
             _token = options.Value.Token;
             _context = context;
             _bot = bot;
+            _generator = generator;
 
             _isRegistrationOpen = options.Value.RegistrationEnabled;
 
             _commands = new List<IBotCommand>()
             {
-                // TODO actual commands
+                new StartCommand(_isRegistrationOpen),
+                new TokenCommand(options.Value.ApiEndpointUrl),
+                new RegenerateCommand(),
+                new DeleteCommand(_isRegistrationOpen),
+                new ConfirmCommand(_context, _generator),
+                new CancelCommand(),
+                new HelpCommand(),
+                new DirectiveCommand()
+
             };
+            _thatOneCommand = new CreateCommand(_context, _generator,
+                _isRegistrationOpen);
         }
 
         /// <summary>
@@ -85,15 +106,23 @@ namespace WebToTelegramCore.Services
             Record record = GetRecordByAccountId(userId.Value);
 
             IBotCommand handler = null;
-            foreach (var command in _commands)
+            if (text.StartsWith(_thatOneCommand.Command))
             {
-                if (text.StartsWith(command.Command))
+                handler = _thatOneCommand;
+                _thatOneCommand.Crutch = userId.Value;
+            }
+            else
+            {
+                _thatOneCommand.Crutch = null;
+                foreach (var command in _commands)
                 {
-                    handler = command;
-                    break;
+                    if (text.StartsWith(command.Command))
+                    {
+                        handler = command;
+                        break;
+                    }
                 }
             }
-
             if (handler != null)
             {
                 _bot.Send(userId.Value, handler.Process(record));
