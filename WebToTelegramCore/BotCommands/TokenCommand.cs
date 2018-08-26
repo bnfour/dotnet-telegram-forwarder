@@ -44,7 +44,7 @@ namespace WebToTelegramCore.BotCommands
         private const string _templateOne = "Your token is\n\n`{0}`\n\n. *Usage*:\n" +
             "Send a POST request to {1} with JSON body. Body must contain two string " +
             "fields: \"token\" with your token, and \"message\" with text to send via bot." +
-            "\n\nExample:\n```\n{\n  \"token\": \"{0}\",\n  \"message\": \"{2}\"\n}" +
+            "\n\nExample:\n```\n{{\n  \"token\": \"{0}\",\n  \"message\": \"{2}\"\n}}" +
             "\n```";
 
         /// <summary>
