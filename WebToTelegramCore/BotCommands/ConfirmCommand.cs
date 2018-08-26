@@ -83,7 +83,7 @@ namespace WebToTelegramCore.BotCommands
             string newToken = _tokenGenerator.Generate();
             record.Token = newToken;
             record.State = RecordState.Normal;
-
+            _context.SaveChanges();
             return String.Format(_regenration, newToken);
         }
 
