@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 using WebToTelegramCore.Data;
 using WebToTelegramCore.Models;
@@ -21,12 +21,17 @@ namespace WebToTelegramCore.Services
         /// <summary>
         /// Field to store app's database context.
         /// </summary>
-        private RecordContext _context;
+        private readonly RecordContext _context;
 
         /// <summary>
         /// Field to store bot service used to send messages.
         /// </summary>
-        private ITelegramBotService _bot;
+        private readonly ITelegramBotService _bot;
+
+        /// <summary>
+        /// Holds string representations of various response results.
+        /// </summary>
+        private readonly Dictionary<ResponseState, string> _details;
 
         /// <summary>
         /// Constuctor that injects dependencies.
@@ -34,13 +39,24 @@ namespace WebToTelegramCore.Services
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service to use.</param>
         /// <param name="options">Bandwidth options.</param>
+        /// <param name="locale">Localization options.</param>
         public OwnApiService(RecordContext context, ITelegramBotService bot,
-            IOptions<BandwidthOptions> options)
+            IOptions<BandwidthOptions> options, IOptions<LocalizationOptions> locale)
         {
             _context = context;
             _bot = bot;
 
             _secondsPerRegen = options.Value.SecondsPerRegeneration;
+
+
+            LocalizationOptions locOptions = locale.Value;
+            _details = new Dictionary<ResponseState, string>()
+            {
+                [ResponseState.OkSent] = locOptions.RequestOk,
+                [ResponseState.BandwidthExceeded] = locOptions.RequestBandwidthExceeded,
+                [ResponseState.NoSuchToken] = locOptions.RequestNoToken,
+                [ResponseState.SomethingBadHappened] = locOptions.RequestWhat
+            };
         }
 
         /// <summary>
@@ -51,7 +67,8 @@ namespace WebToTelegramCore.Services
         /// <returns>Response to the request, ready to be returned to client.</returns>
         public Response HandleRequest(Request request)
         {
-            return new Response(HandleRequestInternally(request));
+            ResponseState result = HandleRequestInternally(request);
+            return new Response(result, _details[result]);
         }
 
         /// <summary>

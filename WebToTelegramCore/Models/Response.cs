@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using ResponseState = WebToTelegramCore.Data.ResponseState;
+﻿using ResponseState = WebToTelegramCore.Data.ResponseState;
 
 namespace WebToTelegramCore.Models
 {
@@ -25,29 +23,16 @@ namespace WebToTelegramCore.Models
         /// </summary>
         public string Details { get; private set; }
 
-        // TODO: make these localization-friendly (via appsettings.json, I guess?)
-
-        /// <summary>
-        /// Holds string representation of errors.
-        /// </summary>
-        private static Dictionary<ResponseState, string> _details
-            = new Dictionary<ResponseState, string>()
-        {
-            [ResponseState.OkSent] = "Request accepted",
-            [ResponseState.NoSuchToken] = "Invalid token",
-            [ResponseState.BandwidthExceeded] = "Too many messages. Try again later",
-            [ResponseState.SomethingBadHappened] = "Internal server error"
-        };
-
         /// <summary>
         /// Class constructor.
         /// </summary>
         /// <param name="state">ResponseState field values are based on.</param>
-        public Response(ResponseState state)
+        /// <param name="details">Human-readable message corresponding to state.</param>
+        public Response(ResponseState state, string details)
         {
             Ok = state == ResponseState.OkSent;
             Code = (int)state;
-            Details = _details[state];
+            Details = details;
         }
     }
 }
