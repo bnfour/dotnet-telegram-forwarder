@@ -29,7 +29,11 @@ namespace WebToTelegramCore.BotCommands
             "Powered by .NET!",
             "robots can digest anything",
             "Are you still there?",
-            "Could you come over here?"
+            "Could you come over here?",
+            "Is it banana time yet?",
+            "Try again later",
+            "More than two and less than four",
+            "Of course I still love you"
         };
 
         /// <summary>
