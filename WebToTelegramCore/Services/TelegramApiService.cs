@@ -95,7 +95,8 @@ namespace WebToTelegramCore.Services
                 new ConfirmCommand(locOptions, _context, _generator),
                 new CancelCommand(locOptions),
                 new HelpCommand(locOptions),
-                new DirectiveCommand(locOptions)
+                new DirectiveCommand(locOptions),
+                new AboutCommand(locOptions)
 
             };
             _thatOneCommand = new CreateCommand(locOptions, _context, _generator,
