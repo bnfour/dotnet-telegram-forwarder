@@ -133,14 +133,7 @@ namespace WebToTelegramCore.Services
             else
             {
                 _thatOneCommand.Crutch = null;
-                foreach (var command in _commands)
-                {
-                    if (text.StartsWith(command.Command))
-                    {
-                        handler = command;
-                        break;
-                    }
-                }
+                handler = _commands.SingleOrDefault(c => text.StartsWith(c.Command));
             }
             if (handler != null)
             {
