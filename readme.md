@@ -59,10 +59,10 @@ accepted.
 
 ## Configuration and deployment
 By default, listens on port 8082. This can be changed with `--port <desired port>` command-line argument.  
-Rest of the settings are inside `appsettings.json`.  
-"Strings" section contains all the customizable strings just in case localization is ever needed.  
-"General" section contains Telegram's bot token, API endpoint URL as seen from outside world (certainly not localhost:8082 as Kestrel would told you it listens to) and a boolean that controls whether new users can create tokens.  
-"Bandwidth" section controls bot's throughput: maximum amount of messages to be delivered at once and amount of seconds to regenerate one message delivery is set here.  
+Rest of the settings are inside `appsettings.json`:  
+* "Strings" section contains all the customizable strings just in case localization is ever needed.  
+* "General" section contains Telegram's bot token, API endpoint URL as seen from outside world (certainly not localhost:8082 as Kestrel would told you it listens to) and a boolean that controls whether new users can create tokens.  
+* "Bandwidth" section controls bot's throughput: maximum amount of messages to be delivered at once and amount of seconds to regenerate one message delivery is set here.  
 To deploy this bot, you'll need something that will append SSL as required by Telegram. As always, I recommend `nginx` as a reverse proxy. Another quirk is that launching via `./WebToTelegramCore`
 didn't worked with my setup: server had ASP.NET Core 2.1.3 runtime, but app was expecting 2.1.2. `dotnet WebToTelegramCore.dll` worked though.
 
