@@ -60,7 +60,7 @@ namespace WebToTelegramCore.Services
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
-            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown);
+            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, true);
         }
 
         /// <summary>
