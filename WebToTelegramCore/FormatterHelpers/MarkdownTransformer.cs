@@ -23,7 +23,7 @@ namespace WebToTelegramCore.FormatterHelpers
         /// <summary>
         /// List of regexes that will escape symbols from _toEscape.
         /// </summary>
-        private readonly List<Regex> _regexes;
+        private readonly List<Regex> _regexes = new List<Regex>();
 
         /// <summary>
         /// Constructor that sets up used regexes.
