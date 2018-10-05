@@ -19,5 +19,13 @@
         /// </summary>
         /// <param name="accountId">ID of account to send sticker to.</param>
         void SendTheSticker(long accountId);
+
+        /// <summary>
+        /// Sends message in CommonMark as Markdown. Used only internally as a crutch
+        /// to display properly formatteded pre-defined messages. HTML breaks them :(
+        /// </summary>
+        /// <param name="accountId">ID of account to send message to.</param>
+        /// <param name="message">Text of the message.</param>
+        void SendPureMarkdown(long accountId, string message);
     }
 }

@@ -52,7 +52,10 @@ namespace WebToTelegramCore.Services
             var doc = Markdig.Parsers.MarkdownParser.Parse(cm);
             renderer.Render(doc);
             writer.Flush();
-            return writer.ToString();
+            var formatted = writer.ToString();
+            formatted = formatted
+                .Replace("<br />", "&#10;");
+            return formatted;
         }
     }
 }

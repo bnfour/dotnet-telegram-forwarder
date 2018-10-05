@@ -83,5 +83,17 @@ namespace WebToTelegramCore.Services
             var chatId = new ChatId(accountId);
             _client.SendStickerAsync(chatId, _sticker);
         }
+
+        /// <summary>
+        /// Sends message in CommonMark as Markdown. Used only internally as a crutch
+        /// to display properly formatteded pre-defined messages. HTML breaks them :(
+        /// </summary>
+        /// <param name="accountId">ID of account to send message to.</param>
+        /// <param name="message">Text of the message.</param>
+        public void SendPureMarkdown(long accountId, string message)
+        {
+            var chatId = new ChatId(accountId);
+            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, true);
+        }
     }
 }

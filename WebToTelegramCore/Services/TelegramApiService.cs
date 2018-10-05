@@ -138,7 +138,7 @@ namespace WebToTelegramCore.Services
             }
             if (handler != null)
             {
-                _bot.Send(userId.Value, handler.Process(record));
+                _bot.SendPureMarkdown(userId.Value, handler.Process(record));
             }
             else
             {
