@@ -14,10 +14,10 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Template to message, {0} is assembly version.
         /// </summary>
-        private const string _template = "*Dotnet telegram forwarder* v. {0}\n\n" +
+        private const string _template = "**Dotnet Telegram forwarder** v. {0}\n\n" +
             "[Open-source!](https://github.com/bnfour/dotnet-telegram-forwarder) " +
             "Powered by ASP.NET Core!\n" +
-            "Written by bnfour, August 2018.\n\nN<3";
+            "Written by bnfour, August, October 2018.\n\nN<3";
 
         /// <summary>
         /// Command's text.
