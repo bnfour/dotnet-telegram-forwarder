@@ -31,11 +31,21 @@ namespace WebToTelegramCore.Services
         private readonly InputOnlineFile _sticker = new InputOnlineFile(_theStickerID);
 
         /// <summary>
+        /// Field to store used instance of formatter.
+        /// </summary>
+        private readonly IFormatterService _formatter;
+
+        /// <summary>
         /// Constructor that also sets up the webhook.
         /// </summary>
-        public TelegramBotService(IOptions<CommonOptions> options)
+        /// <param name="options">Options to use.</param>
+        /// <param name="formatter">Formatter to use.</param>
+        public TelegramBotService(IOptions<CommonOptions> options,
+            IFormatterService formatter)
         {
             _client = new TelegramBotClient(options.Value.Token);
+
+            _formatter = formatter;
 
             var webhookUrl = options.Value.ApiEndpointUrl + "/" + options.Value.Token;
             // this code is dumb and single-threaded. _Maybe_ later
@@ -60,7 +70,8 @@ namespace WebToTelegramCore.Services
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
-            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, true);
+            _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
+                ParseMode.Html, true);
         }
 
         /// <summary>

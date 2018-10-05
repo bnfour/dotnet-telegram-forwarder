@@ -33,6 +33,7 @@ namespace WebToTelegramCore
 
             services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
+            services.AddSingleton<IFormatterService, FormatterService>();
 
             services.AddScoped<IOwnApiService, OwnApiService>();
             services.AddScoped<ITelegramApiService, TelegramApiService>();
