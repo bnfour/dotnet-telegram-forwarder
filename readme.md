@@ -23,6 +23,8 @@ Request should look like that:
 	"message": "text to be delivered via bot"
 }
 ```
+Messages use the same format Telegram does: major differences are `**bold**` for **bold**, `__italic__` for *italic*. Also, `<` and `>` should be escaped as `&lt;` and `&gt;` for notifications to work. Complex formatting may break down the makeshift "parser", test notification to get through.  
+
 Tokens are tied to Telegram IDs internally, also there is limitations on how often messages can be sent: every token has up to 20 instant deliveries, 
 with one regenerating every minute after last successful message delivery.  
 If request was correctly formed, API will respond with another JSON object:  
