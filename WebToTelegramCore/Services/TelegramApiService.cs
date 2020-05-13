@@ -42,11 +42,6 @@ namespace WebToTelegramCore.Services
         private readonly List<IBotCommand> _commands;
 
         /// <summary>
-        /// /create handler, as it requires special treating since i'm bad at programming.
-        /// </summary>
-        private readonly CreateCommand _thatOneCommand;
-
-        /// <summary>
         /// Indicates whether usage of /create command is enabled.
         /// </summary>
         private readonly bool _isRegistrationOpen;
@@ -96,11 +91,9 @@ namespace WebToTelegramCore.Services
                 new CancelCommand(locOptions),
                 new HelpCommand(locOptions),
                 new DirectiveCommand(locOptions),
-                new AboutCommand(locOptions)
-
+                new AboutCommand(locOptions),
+                new CreateCommand(locOptions, _context, _generator, _isRegistrationOpen)
             };
-            _thatOneCommand = new CreateCommand(locOptions, _context, _generator,
-                _isRegistrationOpen);
         }
 
         /// <summary>
@@ -109,7 +102,8 @@ namespace WebToTelegramCore.Services
         /// <param name="update">Received update.</param>
         public void HandleUpdate(Update update)
         {
-            // a few sanity checks
+            // a few sanity checks:
+            // only handles text messages, hopefully commands
             if (update.Message.Type != MessageType.Text)
             {
                 return;
@@ -117,7 +111,7 @@ namespace WebToTelegramCore.Services
 
             long? userId = update?.Message?.From?.Id;
             string text = update?.Message?.Text;
-
+            // and the update contains everything we need to process it
             if (userId == null || String.IsNullOrEmpty(text))
             {
                 return;
@@ -126,23 +120,16 @@ namespace WebToTelegramCore.Services
             Record record = _context.GetRecordByAccountId(userId.Value);
 
             IBotCommand handler = null;
-            if (text.StartsWith(_thatOneCommand.Command))
-            {
-                handler = _thatOneCommand;
-                _thatOneCommand.Crutch = userId.Value;
-            }
-            else
-            {
-                _thatOneCommand.Crutch = null;
-                handler = _commands.SingleOrDefault(c => text.StartsWith(c.Command));
-            }
+            string commandText = text.Split(' ').FirstOrDefault();
+            // will crash if multiple command classes share same text, who cares
+            handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
             if (handler != null)
             {
-                _bot.SendPureMarkdown(userId.Value, handler.Process(record));
+                _bot.SendPureMarkdown(userId.Value, handler.Process(userId.Value, record));
             }
             else
             {
-                HandleUnknownText(userId.Value, text);
+                HandleUnknownText(userId.Value, commandText);
             }
         }
 
@@ -173,8 +160,7 @@ namespace WebToTelegramCore.Services
             }
             else
             {
-                string reply = text.StartsWith("/") ?
-                    _invalidCommandReply : _invalidReply;
+                string reply = text.StartsWith("/") ? _invalidCommandReply : _invalidReply;
                 _bot.Send(accountId, reply);
             }
         }

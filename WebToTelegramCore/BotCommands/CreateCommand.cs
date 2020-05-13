@@ -35,16 +35,6 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         private readonly ITokenGeneratorService _generator;
 
-        // I'm bad at computer programming:
-        // the existing "architecture" always passes nulls as Records if user have
-        // no record in DB yet. That means it's impossible to create a user :(
-        // so here we go
-        // TODO: do something better
-        /// <summary>
-        /// ID of account that sent the command.
-        /// </summary>
-        public long? Crutch { get; set; }
-
         /// <summary>
         /// Field to store whether registration is enabled. True is enabled.
         /// </summary>
@@ -73,28 +63,25 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         /// <param name="record">Record to process.</param>
         /// <returns>Message with new token or error when there is one already.</returns>
-        public override string Process(Record record)
+        public override string Process(long userId, Record record)
         {
-            return base.Process(record) ?? InternalProcess(record);
+            return base.Process(userId, record) ?? InternalProcess(userId, record);
         }
 
         /// <summary>
         /// Actual method that does registration or denies it.
         /// </summary>
-        /// <param name="record">Record to process. _Must be null_.</param>
+        /// <param name="userId">Telegram user ID to create a new record. _The_ place in the app
+        /// it's used.</param>
+        /// <param name="record">Record to process. Is null if working properly.</param>
         /// <returns>Message with new token or message stating that registration
         /// is closed for good.</returns>
-        private string InternalProcess(Record record)
+        private string InternalProcess(long userId, Record record)
         {
-            // record being null is enforced by base calls.
-            if (!Crutch.HasValue)
-            {
-                throw new ApplicationException("Crutch is not set before calling");
-            }
             if (_isRegistrationEnabled)
             {
                 string token = _generator.Generate();
-                Record r = new Record() { AccountNumber = Crutch.Value, Token = token };
+                Record r = new Record() { AccountNumber = userId, Token = token };
                 _context.Add(r);
                 _context.SaveChanges();
                 return String.Format(_message, token);
