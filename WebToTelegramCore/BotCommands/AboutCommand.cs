@@ -16,8 +16,8 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         private const string _template = "**Dotnet Telegram forwarder** v. {0}\n\n" +
             "[Open-source!](https://github.com/bnfour/dotnet-telegram-forwarder) " +
-            "Powered by ASP.NET Core!\n" +
-            "Written by bnfour, August, October 2018; May 2020.\n\nN<3";
+            "Powered by .NET 6.0!!!\n" +
+            "Written by bnfour, August, October 2018; May 2020; December 2021.";
 
         /// <summary>
         /// Command's text.
@@ -41,7 +41,8 @@ namespace WebToTelegramCore.BotCommands
         public override string Process(long userId, Record record)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            return base.Process(userId, record) ?? String.Format(_template, version);
+            var prettyVersion = $"{version.Major}.{version.Minor}";
+            return base.Process(userId, record) ?? String.Format(_template, prettyVersion);
         }
     }
 }

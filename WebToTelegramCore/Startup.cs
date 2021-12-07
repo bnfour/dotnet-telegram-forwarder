@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,7 +21,7 @@ namespace WebToTelegramCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc();
 
             // singleton makes changes to non-db properties persistent
             services.AddDbContext<RecordContext>(options =>
@@ -38,6 +35,10 @@ namespace WebToTelegramCore
             services.AddScoped<IOwnApiService, OwnApiService>();
             services.AddScoped<ITelegramApiService, TelegramApiService>();
 
+            // quick crutch -- Telegram.Bot's update class relies on some Newtonsoft attributes,
+            // so to deserialize it correctly, we need to use this library as well
+            services.AddControllers().AddNewtonsoftJson();
+
             // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
             services.Configure<BandwidthOptions>(Configuration.GetSection("Bandwidth"));
@@ -47,17 +48,6 @@ namespace WebToTelegramCore
             // TODO: see if there's a better way
             var preload = Configuration.GetSection("Bandwidth").GetValue<int>("InitialCount");
             Record.SetMaxValue(preload);
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseMvc();
         }
     }
 }

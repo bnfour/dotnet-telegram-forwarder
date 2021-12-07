@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -47,10 +48,12 @@ namespace WebToTelegramCore.Services
 
             _formatter = formatter;
 
-            var webhookUrl = options.Value.ApiEndpointUrl + "/" + options.Value.Token;
-            // this code is dumb and single-threaded. _Maybe_ later
-            _client.SetWebhookAsync(webhookUrl,
-                allowedUpdates: new[] { UpdateType.Message });
+            // made unclear that "api" part is needed as well, shot myself in the leg 3 years after
+            var webhookUrl = options.Value.ApiEndpointUrl + "/api/" + options.Value.Token;
+            // don't know whether old version without firing an actual thread still worked,
+            // it was changed as i tried to debug a "connection" issue where wrong config file was loaded
+            Task.Run(() => _client.SetWebhookAsync(webhookUrl,
+               allowedUpdates: new[] { UpdateType.Message })).Wait();
         }
 
         /// <summary>
@@ -71,7 +74,7 @@ namespace WebToTelegramCore.Services
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
             _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
-                ParseMode.Html, true);
+                ParseMode.Html, disableWebPagePreview: true);
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace WebToTelegramCore.Services
         public void SendPureMarkdown(long accountId, string message)
         {
             var chatId = new ChatId(accountId);
-            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, true);
+            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, disableWebPagePreview: true);
         }
     }
 }

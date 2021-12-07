@@ -1,8 +1,4 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true
-  },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "WebToTelegramCore": {
