@@ -57,11 +57,12 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to carry on confirmed destructive operations.
         /// </summary>
+        /// <param name="userId">Telegram user ID, unused here.</param>
         /// <param name="record">Record associated with user who sent the command.</param>
         /// <returns>End-user readable result of the operation.</returns>
-        public override string Process(Record record)
+        public override string Process(long userId, Record record)
         {
-            string baseResult = base.Process(record);
+            string baseResult = base.Process(userId, record);
             if (baseResult != null)
             {
                 return baseResult;

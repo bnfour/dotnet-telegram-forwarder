@@ -37,12 +37,13 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to process the command. Resets Record's State back to Normal.
         /// </summary>
+        /// <param name="userId">Telegram user ID. Unused here.</param>
         /// <param name="record">Record associated with user who sent the command.</param>
         /// <returns>Predefined text if all checks from parent classes passed,
         /// corresponding error message otherwise.</returns>
-        public override string Process(Record record)
+        public override string Process(long userId, Record record)
         {
-            string baseResult = base.Process(record);
+            string baseResult = base.Process(userId, record);
             if (baseResult != null)
             {
                 return baseResult;

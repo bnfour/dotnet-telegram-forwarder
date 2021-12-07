@@ -25,12 +25,14 @@ namespace WebToTelegramCore.BotCommands
         /// Method of abstract base class that adds filtering out users
         /// with no associated token.
         /// </summary>
+        /// <param name="userId">Telegram user ID. Unused there, as record.AccountNumber is
+        /// the same value.</param>
         /// <param name="record">Record to process.</param>
         /// <returns>Error message if there is an operation pending or user has no token,
         /// or null otherwise.</returns>
-        public new virtual string Process(Record record)
+        public new virtual string Process(long userId, Record record)
         {
-            return base.Process(record) ?? InternalProcess(record);
+            return base.Process(userId, record) ?? InternalProcess(record);
         }
 
         /// <summary>
