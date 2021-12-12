@@ -1,4 +1,4 @@
-﻿namespace WebToTelegramCore.Services
+﻿namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface that exposes method to convert Markdown flavor that used in

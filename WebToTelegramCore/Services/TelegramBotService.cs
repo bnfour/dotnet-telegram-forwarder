@@ -4,7 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
-
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.Services

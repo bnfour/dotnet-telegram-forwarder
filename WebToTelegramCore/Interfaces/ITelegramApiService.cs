@@ -1,6 +1,6 @@
 ﻿using Update = Telegram.Bot.Types.Update;
 
-namespace WebToTelegramCore.Services
+namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to implement Telegram webhook handling.

@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Models;
 
-namespace WebToTelegramCore.Services
+namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to implement non-Telegram web API handling.

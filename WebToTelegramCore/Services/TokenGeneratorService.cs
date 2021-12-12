@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using WebToTelegramCore.Interfaces;
 
 namespace WebToTelegramCore.Services
 {

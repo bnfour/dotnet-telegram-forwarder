@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using WebToTelegramCore.Exceptions;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Options;
 

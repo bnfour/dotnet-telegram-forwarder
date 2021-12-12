@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Models;
 
-namespace WebToTelegramCore.BotCommands
+namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to implement various bot commands without arguments.

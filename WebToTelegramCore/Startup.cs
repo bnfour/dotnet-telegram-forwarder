@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
@@ -35,7 +35,7 @@ namespace WebToTelegramCore
             services.AddScoped<IOwnApiService, OwnApiService>();
             services.AddScoped<ITelegramApiService, TelegramApiService>();
 
-            // quick crutch -- Telegram.Bot's update class relies on some Newtonsoft attributes,
+            // Telegram.Bot's Update class relies on some Newtonsoft attributes,
             // so to deserialize it correctly, we need to use this library as well
             services.AddControllers().AddNewtonsoftJson();
 

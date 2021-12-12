@@ -1,4 +1,4 @@
-﻿namespace WebToTelegramCore.Services
+﻿namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface that exposes greatly simplified version of Telegram bot API.
