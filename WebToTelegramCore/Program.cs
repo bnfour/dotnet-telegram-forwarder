@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
+using System;
 
 namespace WebToTelegramCore
 {
@@ -20,8 +20,13 @@ namespace WebToTelegramCore
             {
                 // quick fix to prevent using solution folder for configuration files
                 // instead of built binary folder, where these files are overridden with juicy secrets
-                ContentRootPath = System.AppContext.BaseDirectory
+                ContentRootPath = AppContext.BaseDirectory
             });
+            // this is used to force the code to use database from the current (e.g output for debug) directory
+            // instead of using the file in the project root every launch
+            // please not that this value ends with backslash, so in the connection string,
+            // file name goes straight after |DataDirectory|, no slashes of any kind
+            AppDomain.CurrentDomain.SetData("DataDirectory", AppContext.BaseDirectory);
 
             builder.WebHost.UseKestrel(kestrelOptions =>
             {
