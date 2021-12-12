@@ -1,7 +1,7 @@
 ﻿using System;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Options;
-using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore.BotCommands
 {

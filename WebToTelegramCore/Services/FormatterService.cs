@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using WebToTelegramCore.FormatterHelpers;
+using WebToTelegramCore.Interfaces;
 
 namespace WebToTelegramCore.Services
 {

@@ -4,7 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
-
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.Services
@@ -61,7 +61,9 @@ namespace WebToTelegramCore.Services
         /// </summary>
         ~TelegramBotService()
         {
-            _client.DeleteWebhookAsync();
+            // this probably never worked anyway
+            // TODO think of a better way to acquire/release webhooks
+            Task.Run(() => _client.DeleteWebhookAsync()).Wait();
         }
 
         /// <summary>
@@ -69,11 +71,11 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="message">Markdown-formatted message.</param>
-        public void Send(long accountId, string message)
+        public async Task Send(long accountId, string message)
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
-            _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
+            await _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
                 ParseMode.Html, disableWebPagePreview: true);
         }
 
@@ -81,10 +83,10 @@ namespace WebToTelegramCore.Services
         /// Method to send predefined sticker on behalf of the bot.
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
-        public void SendTheSticker(long accountId)
+        public async Task SendTheSticker(long accountId)
         {
             var chatId = new ChatId(accountId);
-            _client.SendStickerAsync(chatId, _sticker);
+            await _client.SendStickerAsync(chatId, _sticker);
         }
 
         /// <summary>
@@ -93,10 +95,10 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of account to send message to.</param>
         /// <param name="message">Text of the message.</param>
-        public void SendPureMarkdown(long accountId, string message)
+        public async Task SendPureMarkdown(long accountId, string message)
         {
             var chatId = new ChatId(accountId);
-            _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, disableWebPagePreview: true);
+            await _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, disableWebPagePreview: true);
         }
     }
 }

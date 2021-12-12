@@ -1,6 +1,7 @@
-﻿using WebToTelegramCore.Models;
+﻿using System.Threading.Tasks;
+using WebToTelegramCore.Models;
 
-namespace WebToTelegramCore.Services
+namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to implement non-Telegram web API handling.
@@ -11,7 +12,6 @@ namespace WebToTelegramCore.Services
         /// Method to handle incoming request from the web API.
         /// </summary>
         /// <param name="request">Request to handle.</param>
-        // TODO add async everywhere and try not to go mad in the process
-        void HandleRequest(Request request);
+        Task HandleRequest(Request request);
     }
 }

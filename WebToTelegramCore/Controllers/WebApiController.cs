@@ -3,8 +3,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using WebToTelegramCore.Exceptions;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Services;
 
 namespace WebToTelegramCore.Controllers
 {
@@ -37,7 +37,7 @@ namespace WebToTelegramCore.Controllers
             }
             try
             {
-                _ownApi.HandleRequest(request);
+                await _ownApi.HandleRequest(request);
                 return Ok();
             }
             catch (TokenNotFoundException)

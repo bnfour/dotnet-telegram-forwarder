@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
-using WebToTelegramCore.Services;
+using WebToTelegramCore.Interfaces;
 
 namespace WebToTelegramCore.Controllers
 {
@@ -45,7 +45,7 @@ namespace WebToTelegramCore.Controllers
             }
             try
             {
-                _tgApi.HandleUpdate(update);
+                await _tgApi.HandleUpdate(update);
                 return Ok();
             }
             catch
