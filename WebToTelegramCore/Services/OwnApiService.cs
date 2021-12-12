@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Threading.Tasks;
 using WebToTelegramCore.Exceptions;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
@@ -46,16 +47,16 @@ namespace WebToTelegramCore.Services
         /// Public method to handle incoming requests. Call underlying internal method.
         /// </summary>
         /// <param name="request">Request to handle.</param>
-        public void HandleRequest(Request request)
+        public async Task HandleRequest(Request request)
         {
-            HandleRequestInternally(request);
+            await HandleRequestInternally(request);
         }
 
         /// <summary>
         /// Internal method to handle requests.
         /// </summary>
         /// <param name="request">Request to handle.</param>
-        private void HandleRequestInternally(Request request)
+        private async Task HandleRequestInternally(Request request)
         {
             var record = _context.GetRecordByToken(request.Token);
             if (record == null)
@@ -67,7 +68,7 @@ namespace WebToTelegramCore.Services
             {
                 record.LastSuccessTimestamp = DateTime.Now;
                 record.UsageCounter--;
-                _bot.Send(record.AccountNumber, request.Message);
+                await _bot.Send(record.AccountNumber, request.Message);
             }
             else
             {

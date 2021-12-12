@@ -1,4 +1,5 @@
-﻿using Update = Telegram.Bot.Types.Update;
+﻿using System.Threading.Tasks;
+using Update = Telegram.Bot.Types.Update;
 
 namespace WebToTelegramCore.Interfaces
 {
@@ -19,6 +20,6 @@ namespace WebToTelegramCore.Interfaces
         /// Method to handle incoming updates from the webhook.
         /// </summary>
         /// <param name="update">Received update.</param>
-        void HandleUpdate(Update update);
+        Task HandleUpdate(Update update);
     }
 }
