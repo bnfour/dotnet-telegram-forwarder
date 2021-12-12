@@ -37,7 +37,7 @@ namespace WebToTelegramCore.Controllers
             }
             try
             {
-                _ownApi.HandleRequest(request);
+                await _ownApi.HandleRequest(request);
                 return Ok();
             }
             catch (TokenNotFoundException)

@@ -45,7 +45,7 @@ namespace WebToTelegramCore.Controllers
             }
             try
             {
-                _tgApi.HandleUpdate(update);
+                await _tgApi.HandleUpdate(update);
                 return Ok();
             }
             catch

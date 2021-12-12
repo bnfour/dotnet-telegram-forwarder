@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -101,7 +102,7 @@ namespace WebToTelegramCore.Services
         /// Method to handle incoming updates from the webhook.
         /// </summary>
         /// <param name="update">Received update.</param>
-        public void HandleUpdate(Update update)
+        public async Task HandleUpdate(Update update)
         {
             // a few sanity checks:
             // only handles text messages, hopefully commands
@@ -126,11 +127,11 @@ namespace WebToTelegramCore.Services
             handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
             if (handler != null)
             {
-                _bot.SendPureMarkdown(userId.Value, handler.Process(userId.Value, record));
+                await _bot.SendPureMarkdown(userId.Value, handler.Process(userId.Value, record));
             }
             else
             {
-                HandleUnknownText(userId.Value, commandText);
+                await HandleUnknownText(userId.Value, commandText);
             }
         }
 
@@ -152,17 +153,17 @@ namespace WebToTelegramCore.Services
         /// <param name="accountId">User to reply to.</param>
         /// <param name="text">Received message that was not processed
         /// by actual commands.</param>
-        private void HandleUnknownText(long accountId, string text)
+        private async Task HandleUnknownText(long accountId, string text)
         {
             // suddenly, cat!
             if (new Random().Next(0, 19) == 0)
             {
-                _bot.SendTheSticker(accountId);
+                await _bot.SendTheSticker(accountId);
             }
             else
             {
                 string reply = text.StartsWith("/") ? _invalidCommandReply : _invalidReply;
-                _bot.Send(accountId, reply);
+                await _bot.Send(accountId, reply);
             }
         }
     }
