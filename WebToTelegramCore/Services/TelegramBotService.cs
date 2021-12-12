@@ -71,12 +71,12 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="message">Markdown-formatted message.</param>
-        public async Task Send(long accountId, string message)
+        public async Task Send(long accountId, string message, bool silent)
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
             await _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
-                ParseMode.Html, disableWebPagePreview: true);
+                ParseMode.Html, disableWebPagePreview: true, disableNotification: silent);
         }
 
         /// <summary>

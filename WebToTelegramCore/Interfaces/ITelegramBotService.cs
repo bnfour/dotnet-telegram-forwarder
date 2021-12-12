@@ -13,7 +13,7 @@ namespace WebToTelegramCore.Interfaces
         /// </summary>
         /// <param name="accountId">ID of account to send message to.</param>
         /// <param name="message">Text of the message.</param>
-        Task Send(long accountId, string message);
+        Task Send(long accountId, string message, bool silent);
 
         /// <summary>
         /// Sends a predefined sticker. Used as an easter egg with a 5% chance

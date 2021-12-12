@@ -68,7 +68,7 @@ namespace WebToTelegramCore.Services
             {
                 record.LastSuccessTimestamp = DateTime.Now;
                 record.UsageCounter--;
-                await _bot.Send(record.AccountNumber, request.Message);
+                await _bot.Send(record.AccountNumber, request.Message, request.Silent);
             }
             else
             {

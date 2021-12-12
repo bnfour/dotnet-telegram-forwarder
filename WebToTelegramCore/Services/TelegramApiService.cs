@@ -163,7 +163,10 @@ namespace WebToTelegramCore.Services
             else
             {
                 string reply = text.StartsWith("/") ? _invalidCommandReply : _invalidReply;
-                await _bot.Send(accountId, reply);
+                // this is sent immediately after user input, so is not silenced
+                // TODO consider either fully separating or fully merging sending messages from the app logic and api input
+                // (all other command-related text is currently sent via SendPureMarkdown)
+                await _bot.Send(accountId, reply, false);
             }
         }
     }
