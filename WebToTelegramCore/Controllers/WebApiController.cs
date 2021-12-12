@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Net;
 using System.Threading.Tasks;
+using WebToTelegramCore.Exceptions;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Services;
 
@@ -22,18 +25,33 @@ namespace WebToTelegramCore.Controllers
         /// Handles web API calls.
         /// </summary>
         /// <param name="request">Request object in POST request body.</param>
-        /// <returns>400 Bad request on malformed Requests,
-        /// 200 OK with corresponding Response otherwise.</returns>
+        /// <returns>HTTP status code result indicating whether the request was handled
+        /// successfully, or one of the error codes.</returns>
         [HttpPost, Route("api")]
-        // TODO drop response from return type
-        public async Task<ActionResult<Response>> HandleWebApi([FromBody] Request request)
+        public async Task<ActionResult> HandleWebApi([FromBody] Request request)
         {
-            // silently deny malformed requests
+            // deny malformed requests
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            return _ownApi.HandleRequest(request);
+            try
+            {
+                _ownApi.HandleRequest(request);
+                return Ok();
+            }
+            catch (TokenNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (BandwidthExceededException)
+            {
+                return StatusCode((int)HttpStatusCode.TooManyRequests);
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }
