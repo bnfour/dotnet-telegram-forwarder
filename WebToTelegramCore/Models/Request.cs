@@ -19,5 +19,7 @@ namespace WebToTelegramCore.Models
         /// </summary>
         [Required, StringLength(4096)]
         public string Message { get; set; }
+
+        public bool Silent { get; set; } = false;
     }
 }
