@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 using WebToTelegramCore.Exceptions;
@@ -48,7 +47,12 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
-            catch (Exception)
+            // if the formatting is wrong, we may catch this
+            catch (Telegram.Bot.Exceptions.ApiRequestException)
+            {
+                return BadRequest();
+            }
+            catch
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
