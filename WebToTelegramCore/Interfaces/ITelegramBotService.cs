@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using WebToTelegramCore.Data;
 
 namespace WebToTelegramCore.Interfaces
 {
@@ -14,7 +15,8 @@ namespace WebToTelegramCore.Interfaces
         /// <param name="accountId">ID of account to send message to.</param>
         /// <param name="message">Text of the message.</param>
         /// <param name="silent">Flag to set whether to suppress the notification.</param>
-        Task Send(long accountId, string message, bool silent);
+        /// <param name="parsingType">Formatting type used in the message.</param>
+        Task Send(long accountId, string message, bool silent, MessageParsingType parsingType);
 
         /// <summary>
         /// Sends a predefined sticker. Used as an easter egg with a 5% chance

@@ -166,7 +166,7 @@ namespace WebToTelegramCore.Services
                 // this is sent immediately after user input, so is not silenced
                 // TODO consider either fully separating or fully merging sending messages from the app logic and api input
                 // (all other command-related text is currently sent via SendPureMarkdown)
-                await _bot.Send(accountId, reply, false);
+                await _bot.Send(accountId, reply, false, Data.MessageParsingType.Plaintext);
             }
         }
     }
