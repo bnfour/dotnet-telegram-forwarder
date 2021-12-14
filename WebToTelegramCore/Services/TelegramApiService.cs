@@ -127,7 +127,7 @@ namespace WebToTelegramCore.Services
             handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
             if (handler != null)
             {
-                await _bot.SendPureMarkdown(userId.Value, handler.Process(userId.Value, record));
+                await _bot.Send(userId.Value, handler.Process(userId.Value, record));
             }
             else
             {
@@ -166,7 +166,7 @@ namespace WebToTelegramCore.Services
                 // this is sent immediately after user input, so is not silenced
                 // TODO consider either fully separating or fully merging sending messages from the app logic and api input
                 // (all other command-related text is currently sent via SendPureMarkdown)
-                await _bot.Send(accountId, reply, false, Data.MessageParsingType.Plaintext);
+                await _bot.Send(accountId, reply);
             }
         }
     }

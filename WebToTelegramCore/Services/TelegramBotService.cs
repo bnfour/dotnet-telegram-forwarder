@@ -67,7 +67,7 @@ namespace WebToTelegramCore.Services
         /// <param name="message">Markdown-formatted message.</param>
         /// <param name="silent">Flag to set whether to suppress the notification.</param>
         /// <param name="parsingType">Formatting type used in the message.</param>
-        public async Task Send(long accountId, string message, bool silent, MessageParsingType parsingType)
+        public async Task Send(long accountId, string message, bool silent = false, MessageParsingType parsingType = MessageParsingType.Markdown)
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
@@ -85,18 +85,6 @@ namespace WebToTelegramCore.Services
         {
             var chatId = new ChatId(accountId);
             await _client.SendStickerAsync(chatId, _sticker);
-        }
-
-        /// <summary>
-        /// Sends message in CommonMark as Markdown. Used only internally as a crutch
-        /// to display properly formatteded pre-defined messages. HTML breaks them :(
-        /// </summary>
-        /// <param name="accountId">ID of account to send message to.</param>
-        /// <param name="message">Text of the message.</param>
-        public async Task SendPureMarkdown(long accountId, string message)
-        {
-            var chatId = new ChatId(accountId);
-            await _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, disableWebPagePreview: true);
         }
 
         private ParseMode? ResolveRequestParseMode(MessageParsingType fromRequest)
