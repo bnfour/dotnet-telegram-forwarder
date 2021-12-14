@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
+using System;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
+using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Options;
 
@@ -32,21 +34,13 @@ namespace WebToTelegramCore.Services
         private readonly InputOnlineFile _sticker = new InputOnlineFile(_theStickerID);
 
         /// <summary>
-        /// Field to store used instance of formatter.
-        /// </summary>
-        private readonly IFormatterService _formatter;
-
-        /// <summary>
         /// Constructor that also sets up the webhook.
         /// </summary>
         /// <param name="options">Options to use.</param>
         /// <param name="formatter">Formatter to use.</param>
-        public TelegramBotService(IOptions<CommonOptions> options,
-            IFormatterService formatter)
+        public TelegramBotService(IOptions<CommonOptions> options)
         {
             _client = new TelegramBotClient(options.Value.Token);
-
-            _formatter = formatter;
 
             // made unclear that "api" part is needed as well, shot myself in the leg 3 years after
             var webhookUrl = options.Value.ApiEndpointUrl + "/api/" + options.Value.Token;
@@ -72,12 +66,15 @@ namespace WebToTelegramCore.Services
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="message">Markdown-formatted message.</param>
         /// <param name="silent">Flag to set whether to suppress the notification.</param>
-        public async Task Send(long accountId, string message, bool silent)
+        /// <param name="parsingType">Formatting type used in the message.</param>
+        public async Task Send(long accountId, string message, bool silent = false, MessageParsingType parsingType = MessageParsingType.Markdown)
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
-            await _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
-                ParseMode.Html, disableWebPagePreview: true, disableNotification: silent);
+
+            await _client.SendTextMessageAsync(chatId, message,
+                ResolveRequestParseMode(parsingType), disableWebPagePreview: true,
+                disableNotification: silent);
         }
 
         /// <summary>
@@ -90,16 +87,16 @@ namespace WebToTelegramCore.Services
             await _client.SendStickerAsync(chatId, _sticker);
         }
 
-        /// <summary>
-        /// Sends message in CommonMark as Markdown. Used only internally as a crutch
-        /// to display properly formatteded pre-defined messages. HTML breaks them :(
-        /// </summary>
-        /// <param name="accountId">ID of account to send message to.</param>
-        /// <param name="message">Text of the message.</param>
-        public async Task SendPureMarkdown(long accountId, string message)
+        private ParseMode? ResolveRequestParseMode(MessageParsingType fromRequest)
         {
-            var chatId = new ChatId(accountId);
-            await _client.SendTextMessageAsync(chatId, message, ParseMode.Markdown, disableWebPagePreview: true);
+            return fromRequest switch
+            {
+                MessageParsingType.Plaintext => null,
+                MessageParsingType.Markdown => ParseMode.MarkdownV2,
+                // should never happen, but for sake of completeness,
+                // fall back to plaintext
+                _ => null
+            };
         }
     }
 }

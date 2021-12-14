@@ -52,7 +52,6 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
-            
         }
     }
 }

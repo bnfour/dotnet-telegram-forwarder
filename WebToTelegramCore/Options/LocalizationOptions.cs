@@ -92,27 +92,6 @@
         public string RegenerationPending { get; set; }
         
         /// <summary>
-        /// Human-readable representation of ResponseState.BandwidthExceeded enum member.
-        /// </summary>
-        public string RequestBandwidthExceeded { get; set; }
-
-        /// <summary>
-        /// Human-readable representation of ResponseState.NoSuchToken enum member.
-        /// </summary>
-        public string RequestNoToken { get; set; }
-
-        /// <summary>
-        /// Human-readable representation of ResponseState.OkSent enum member.
-        /// </summary>
-        public string RequestOk { get; set; }
-
-        /// <summary>
-        /// Human-readable representation of ResponseState.SomethingBadHappened
-        /// enum member.
-        /// </summary>
-        public string RequestWhat { get; set; }
-        
-        /// <summary>
         /// Message to warn new users that registration is closed.
         /// </summary>
         public string StartGoAway { get; set; }
