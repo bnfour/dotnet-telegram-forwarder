@@ -32,21 +32,13 @@ namespace WebToTelegramCore.Services
         private readonly InputOnlineFile _sticker = new InputOnlineFile(_theStickerID);
 
         /// <summary>
-        /// Field to store used instance of formatter.
-        /// </summary>
-        private readonly IFormatterService _formatter;
-
-        /// <summary>
         /// Constructor that also sets up the webhook.
         /// </summary>
         /// <param name="options">Options to use.</param>
         /// <param name="formatter">Formatter to use.</param>
-        public TelegramBotService(IOptions<CommonOptions> options,
-            IFormatterService formatter)
+        public TelegramBotService(IOptions<CommonOptions> options)
         {
             _client = new TelegramBotClient(options.Value.Token);
-
-            _formatter = formatter;
 
             // made unclear that "api" part is needed as well, shot myself in the leg 3 years after
             var webhookUrl = options.Value.ApiEndpointUrl + "/api/" + options.Value.Token;
@@ -76,8 +68,9 @@ namespace WebToTelegramCore.Services
         {
             // I think we have to promote account ID back to ID of chat with this bot
             var chatId = new ChatId(accountId);
-            await _client.SendTextMessageAsync(chatId, _formatter.TransformToHtml(message),
-                ParseMode.Html, disableWebPagePreview: true, disableNotification: silent);
+            // TODO
+            await _client.SendTextMessageAsync(chatId, "under construction ...sorry",
+                null, disableWebPagePreview: true, disableNotification: silent);
         }
 
         /// <summary>
