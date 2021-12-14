@@ -71,6 +71,7 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="message">Markdown-formatted message.</param>
+        /// <param name="silent">Flag to set whether to suppress the notification.</param>
         public async Task Send(long accountId, string message, bool silent)
         {
             // I think we have to promote account ID back to ID of chat with this bot

@@ -20,6 +20,12 @@ namespace WebToTelegramCore.Models
         [Required, StringLength(4096)]
         public string Message { get; set; }
 
+        /// <summary>
+        /// Optional parameter to suppress the notification for the
+        /// message from the bot. If the to true, message will be silent.
+        /// Note that it's possible for the end used to mute the bot so
+        /// this setting will have no effect.
+        /// </summary>
         public bool Silent { get; set; } = false;
     }
 }

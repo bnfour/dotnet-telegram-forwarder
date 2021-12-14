@@ -13,6 +13,7 @@ namespace WebToTelegramCore.Interfaces
         /// </summary>
         /// <param name="accountId">ID of account to send message to.</param>
         /// <param name="message">Text of the message.</param>
+        /// <param name="silent">Flag to set whether to suppress the notification.</param>
         Task Send(long accountId, string message, bool silent);
 
         /// <summary>
