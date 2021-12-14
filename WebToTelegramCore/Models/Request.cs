@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
+using WebToTelegramCore.Data;
 
 namespace WebToTelegramCore.Models
 {
@@ -27,5 +30,12 @@ namespace WebToTelegramCore.Models
         /// this setting will have no effect.
         /// </summary>
         public bool Silent { get; set; } = false;
+
+        /// <summary>
+        /// Optional parameter to set parsing mode of the message.
+        /// Defaults to plaintext if not specified.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public MessageParsingType Type { get; set; } = MessageParsingType.Plaintext;
     }
 }
