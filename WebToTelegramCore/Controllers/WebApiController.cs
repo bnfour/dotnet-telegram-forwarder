@@ -48,6 +48,7 @@ namespace WebToTelegramCore.Controllers
                 return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
             // if the formatting is wrong, we may catch this
+            // TODO maybe narrow down to the specific message, if there are more cases when this is thrown
             catch (Telegram.Bot.Exceptions.ApiRequestException)
             {
                 return BadRequest();
