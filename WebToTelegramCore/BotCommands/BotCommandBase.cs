@@ -35,13 +35,12 @@ namespace WebToTelegramCore.BotCommands
         /// Method of abstract base class that filters out users with pending
         /// cancellations or deletions of token.
         /// </summary>
-        /// <param name="userId">Telegram ID of user that sent the message.</param>
         /// <param name="record">Record to process.</param>
         /// <returns>Error message if there is an operation pending,
         /// or null otherwise.</returns>
-        public virtual string Process(long userId, Record record)
+        public virtual string Process(Record record)
         {
-            return (record != null && record.State != RecordState.Normal) ?
+            return (!string.IsNullOrEmpty(record.Token) && record.State != RecordState.Normal) ?
                 _error : null;
         }
     }

@@ -126,8 +126,10 @@ namespace WebToTelegramCore.Services
             {
                 return;
             }
-            // null check was done above, it's safe to use userId.Value directly
-            Record record = await _context.GetRecordByAccountId(userId.Value);
+            // if user has no record associated, make him a mock one with just an account number,
+            // so we know who they are in case we're going to create them a proper one
+            Record record = await _context.GetRecordByAccountId(userId.Value)
+                ?? new Record { AccountNumber = userId.Value, Token = null };
 
             IBotCommand handler = null;
             string commandText = text.Split(' ').FirstOrDefault();
@@ -135,7 +137,7 @@ namespace WebToTelegramCore.Services
             handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
             if (handler != null)
             {
-                await _bot.Send(userId.Value, handler.Process(userId.Value, record));
+                await _bot.Send(userId.Value, handler.Process(record));
             }
             else
             {

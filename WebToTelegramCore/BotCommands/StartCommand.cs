@@ -53,15 +53,14 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to process the command.
         /// </summary>
-        /// <param name="userId">Unused Telegram user ID.</param>
         /// <param name="record">Record associated with user who sent the command.
         /// Unused here.</param>
         /// <returns>Predefined text if all checks from parent classes passed,
         /// corresponding error message otherwise.</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
             string appendix = _isRegistrationOpen ? _registrationHint : _noRegistration;
-            return base.Process(userId, record) ?? _startMessage + "\n\n" + appendix;
+            return base.Process(record) ?? _startMessage + "\n\n" + appendix;
         }
     }
 }

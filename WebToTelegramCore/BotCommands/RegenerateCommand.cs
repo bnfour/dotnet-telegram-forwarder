@@ -33,12 +33,11 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to process the command.
         /// </summary>
-        /// <param name="userId">Unused Telegram user ID.</param>
         /// <param name="record">Record to process.</param>
         /// <returns>Message with results of processing.</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
-            return base.Process(userId, record) ?? InternalProcess(record);
+            return base.Process(record) ?? InternalProcess(record);
         }
 
         /// <summary>

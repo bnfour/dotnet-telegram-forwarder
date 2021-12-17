@@ -64,12 +64,11 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to carry on confirmed destructive operations.
         /// </summary>
-        /// <param name="userId">Telegram user ID, unused here.</param>
         /// <param name="record">Record associated with user who sent the command.</param>
         /// <returns>End-user readable result of the operation.</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
-            string baseResult = base.Process(userId, record);
+            string baseResult = base.Process(record);
             if (baseResult != null)
             {
                 return baseResult;
@@ -108,7 +107,7 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Message about performed operation.</returns>
         private string Delete(Record record)
         {
-            _context.Records.Remove(record);
+            _context.Remove(record);
             _context.SaveChanges();
             return _deletion;
         }

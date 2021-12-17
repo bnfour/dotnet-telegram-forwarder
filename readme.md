@@ -79,5 +79,5 @@ Initial release. More an excercise in ASP.NET Core than an app I needed at the m
 * **v 1.2**, 2018-10-05  
 Greatly increased the reliability of Markdown parsing in one of the most **not** straightforward ways you can imagine -- by converting the Markdown to HTML with a few custom convertion quirks.
 * **no version number**, 2020-05-14  
-Shelved attempt to improve the codebase. Consists of one architecture change and is fully included in the next release.
+Shelved attempt to improve the codebase. Consists of one architecture change and is fully ~~included~~ rewritten in the next release.
 * TODO the current iteration, version number 1.5? 1.9? Certainly not 2.x _yet_.

@@ -73,9 +73,9 @@ namespace WebToTelegramCore.BotCommands
         /// <param name="record">Record associated with user who sent the command.</param>
         /// <returns>Message with token and API usage, or error message if user
         /// has no token.</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
-            return base.Process(userId, record) ?? InternalProcess(record);
+            return base.Process(record) ?? InternalProcess(record);
         }
 
         /// <summary>

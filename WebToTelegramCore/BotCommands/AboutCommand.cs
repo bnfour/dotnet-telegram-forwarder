@@ -34,16 +34,14 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to process the command.
         /// </summary>
-        /// <param name="userId">Telegram ID of the user who sent the command.
-        /// Unused here.</param>
         /// <param name="record">Record associated with user who sent the command.
         /// Unused here.</param>
         /// <returns>Text of message that should be returned to user, with '.' escaped for MarkdownV2</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             var prettyVersion = $"{version.Major}\\.{version.Minor}";
-            return base.Process(userId, record) ?? String.Format(_template, prettyVersion);
+            return base.Process(record) ?? String.Format(_template, prettyVersion);
         }
     }
 }

@@ -71,25 +71,23 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         /// <param name="record">Record to process.</param>
         /// <returns>Message with new token or error when there is one already.</returns>
-        public override string Process(long userId, Record record)
+        public override string Process(Record record)
         {
-            return base.Process(userId, record) ?? InternalProcess(userId, record);
+            return base.Process(record) ?? InternalProcess(record);
         }
 
         /// <summary>
         /// Actual method that does registration or denies it.
         /// </summary>
-        /// <param name="userId">Telegram user ID to create a new record. _The_ place in the app
-        /// it's used.</param>
         /// <param name="record">Record to process. Is null if working properly.</param>
         /// <returns>Message with new token or message stating that registration
         /// is closed for good.</returns>
-        private string InternalProcess(long userId, Record record)
+        private string InternalProcess(Record record)
         {
             if (_isRegistrationEnabled)
             {
                 string token = _generator.Generate();
-                var r = _recordService.Create(token, userId);
+                var r = _recordService.Create(token, record.AccountNumber);
                 _context.Add(r);
                 _context.SaveChanges();
                 return String.Format(_message, token);
