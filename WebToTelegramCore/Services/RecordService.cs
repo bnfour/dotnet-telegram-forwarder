@@ -34,12 +34,12 @@ namespace WebToTelegramCore.Services
         }
 
         /// <summary>
-        /// Creates a new Record, setting common default values
-        /// for all instances.
+        /// Checks if Record holds enough charges to be able to send a message
+        /// immediately (<see cref="Record.UsageCounter"/> > 0). If so, returns true,
+        /// and updates Record's state to indicate the message was sent just now.
         /// </summary>
-        /// <param name="token">Token to create Record with.</param>
-        /// <param name="accountId">Account id to create token with.</param>
-        /// <returns>Record with all properties populated.</returns>
+        /// <param name="record">Record to check and possibly update.</param>
+        /// <returns>True if message can and should be sent, false otherwise.</returns>
         public bool CheckIfCanSend(Record record)
         {
             var sinceLastSuccess = DateTime.UtcNow - record.LastSuccessTimestamp;
@@ -57,12 +57,12 @@ namespace WebToTelegramCore.Services
         }
 
         /// <summary>
-        /// Checks if Record holds enough charges to be able to send a message
-        /// immediately (<see cref="Record.UsageCounter"/> > 0). If so, returns true,
-        /// and updates Record's state to indicate the message was sent just now.
+        /// Creates a new Record, setting common default values
+        /// for all instances.
         /// </summary>
-        /// <param name="record">Record to check and possibly update.</param>
-        /// <returns>True if message can and should be sent, false otherwise.</returns>
+        /// <param name="token">Token to create Record with.</param>
+        /// <param name="accountId">Account id to create token with.</param>
+        /// <returns>Record with all properties populated.</returns>
         public Record Create(string token, long accountId)
         {
             return new Record
