@@ -36,6 +36,11 @@ namespace WebToTelegramCore.BotCommands
         private readonly ITokenGeneratorService _generator;
 
         /// <summary>
+        /// Record manipulation service helper reference.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// Field to store whether registration is enabled. True is enabled.
         /// </summary>
         private readonly bool _isRegistrationEnabled;
@@ -46,12 +51,15 @@ namespace WebToTelegramCore.BotCommands
         /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator service to use.</param>
+        /// <param name="recordService">Record helper service to use.</param>
         /// <param name="isRegistrationEnabled">State of registration.</param>
         public CreateCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator, bool isRegistrationEnabled) : base(locale)
+            ITokenGeneratorService generator, IRecordService recordService, bool isRegistrationEnabled) : base(locale)
         {
             _context = context;
             _generator = generator;
+            _recordService = recordService;
+
             _isRegistrationEnabled = isRegistrationEnabled;
 
             _message = locale.CreateSuccess;
@@ -81,7 +89,7 @@ namespace WebToTelegramCore.BotCommands
             if (_isRegistrationEnabled)
             {
                 string token = _generator.Generate();
-                Record r = new Record() { AccountNumber = userId, Token = token };
+                var r = _recordService.Create(token, userId);
                 _context.Add(r);
                 _context.SaveChanges();
                 return String.Format(_message, token);

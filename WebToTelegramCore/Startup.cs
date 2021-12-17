@@ -30,6 +30,7 @@ namespace WebToTelegramCore
 
             services.AddScoped<IOwnApiService, OwnApiService>();
             services.AddScoped<ITelegramApiService, TelegramApiService>();
+            services.AddScoped<IRecordService, RecordService>();
 
             services.AddTransient<ITokenGeneratorService, TokenGeneratorService>();
 
@@ -41,11 +42,6 @@ namespace WebToTelegramCore
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
             services.Configure<BandwidthOptions>(Configuration.GetSection("Bandwidth"));
             services.Configure<LocalizationOptions>(Configuration.GetSection("Strings"));
-            // loading this explicitly as there's no straightforward way to pass options
-            // to models; I can be wrong though
-            // TODO: see if there's a better way
-            var preload = Configuration.GetSection("Bandwidth").GetValue<int>("InitialCount");
-            Record.SetMaxValue(preload);
         }
     }
 }

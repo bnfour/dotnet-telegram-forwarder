@@ -39,16 +39,23 @@ namespace WebToTelegramCore.BotCommands
         private readonly ITokenGeneratorService _tokenGenerator;
 
         /// <summary>
+        /// Record manipulation service helper reference.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator to use.</param>
+        /// <param name="recordService">Record helper to use.</param>
         public ConfirmCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator) : base(locale)
+            ITokenGeneratorService generator, IRecordService recordService) : base(locale)
         {
             _context = context;
             _tokenGenerator = generator;
+            _recordService = recordService;
 
             _deletion = locale.ConfirmDeletion;
             _regenration = locale.ConfirmRegeneration;
@@ -87,11 +94,7 @@ namespace WebToTelegramCore.BotCommands
         {
             string newToken = _tokenGenerator.Generate();
             // so apparently, primary key cannot be changed
-            Record newRecord = new Record()
-            {
-                AccountNumber = record.AccountNumber,
-                Token = newToken
-            };
+            var newRecord = _recordService.Create(newToken, record.AccountNumber);
             _context.Remove(record);
             _context.Add(newRecord);
             _context.SaveChanges();

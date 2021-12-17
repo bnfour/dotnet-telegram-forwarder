@@ -39,6 +39,11 @@ namespace WebToTelegramCore.Services
         private readonly ITokenGeneratorService _generator;
 
         /// <summary>
+        /// Record manipulation service helper reference.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// List of commands available to the bot.
         /// </summary>
         private readonly List<IBotCommand> _commands;
@@ -67,14 +72,17 @@ namespace WebToTelegramCore.Services
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service instance to use.</param>
         /// <param name="generator">Token generator service to use.</param>
+        /// <param name="recordService">Record helper service to use.</param>
         public TelegramApiService(IOptions<CommonOptions> options, 
             IOptions<LocalizationOptions> locale, RecordContext context,
-            ITelegramBotService bot, ITokenGeneratorService generator)
+            ITelegramBotService bot, ITokenGeneratorService generator,
+            IRecordService recordService)
         {
             _token = options.Value.Token;
             _context = context;
             _bot = bot;
             _generator = generator;
+            _recordService = recordService;
 
             _isRegistrationOpen = options.Value.RegistrationEnabled;
 
@@ -89,12 +97,12 @@ namespace WebToTelegramCore.Services
                 new TokenCommand(locOptions, options.Value.ApiEndpointUrl),
                 new RegenerateCommand(locOptions),
                 new DeleteCommand(locOptions, _isRegistrationOpen),
-                new ConfirmCommand(locOptions, _context, _generator),
+                new ConfirmCommand(locOptions, _context, _generator, _recordService),
                 new CancelCommand(locOptions),
                 new HelpCommand(locOptions),
                 new DirectiveCommand(locOptions),
                 new AboutCommand(locOptions),
-                new CreateCommand(locOptions, _context, _generator, _isRegistrationOpen)
+                new CreateCommand(locOptions, _context, _generator, _recordService, _isRegistrationOpen)
             };
         }
 

@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.Options;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WebToTelegramCore.Exceptions;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
 
 namespace WebToTelegramCore.Services
 {
@@ -13,11 +10,6 @@ namespace WebToTelegramCore.Services
     /// </summary>
     public class OwnApiService : IOwnApiService
     {
-        /// <summary>
-        /// Amount of seconds lince last successful API call to regenerate counter.
-        /// </summary>
-        private readonly int _secondsPerRegen;
-
         /// <summary>
         /// Field to store app's database context.
         /// </summary>
@@ -29,18 +21,21 @@ namespace WebToTelegramCore.Services
         private readonly ITelegramBotService _bot;
 
         /// <summary>
+        /// Field to store Record management service.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// Constuctor that injects dependencies.
         /// </summary>
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service to use.</param>
         /// <param name="options">Bandwidth options.</param>
-        public OwnApiService(RecordContext context, ITelegramBotService bot, IOptions<BandwidthOptions> options)
+        public OwnApiService(RecordContext context, ITelegramBotService bot, IRecordService recordService)
         {
             _context = context;
             _bot = bot;
-
-            _secondsPerRegen = options.Value.SecondsPerRegeneration;
-
+            _recordService = recordService;
         }
 
         /// <summary>
@@ -49,44 +44,19 @@ namespace WebToTelegramCore.Services
         /// <param name="request">Request to handle.</param>
         public async Task HandleRequest(Request request)
         {
-            await HandleRequestInternally(request);
-        }
-
-        /// <summary>
-        /// Internal method to handle requests.
-        /// </summary>
-        /// <param name="request">Request to handle.</param>
-        private async Task HandleRequestInternally(Request request)
-        {
             var record = await _context.GetRecordByToken(request.Token);
             if (record == null)
             {
                 throw new TokenNotFoundException();
             }
-            UpdateRecordCounter(record);
-            if (record.UsageCounter > 0)
+            if (_recordService.CheckIfCanSend(record))
             {
-                record.LastSuccessTimestamp = DateTime.Now;
-                record.UsageCounter--;
                 await _bot.Send(record.AccountNumber, request.Message, request.Silent, request.Type);
             }
             else
             {
                 throw new BandwidthExceededException();
             }
-        }
-
-        /// <summary>
-        /// Updates Record's usage counter based on time passed since last successful
-        /// message delivery.
-        /// </summary>
-        /// <param name="record">Record to update.</param>
-        private void UpdateRecordCounter(Record record)
-        {
-            TimeSpan sinceLastSuccess = DateTime.Now - record.LastSuccessTimestamp;
-            int toAdd = (int)(sinceLastSuccess.TotalSeconds / _secondsPerRegen);
-            // overflows are handled in the property's setter
-            record.UsageCounter += toAdd;
         }
     }
 }
