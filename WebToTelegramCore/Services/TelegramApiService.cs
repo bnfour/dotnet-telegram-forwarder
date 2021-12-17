@@ -119,7 +119,7 @@ namespace WebToTelegramCore.Services
                 return;
             }
             // null check was done above, it's safe to use userId.Value directly
-            Record record = _context.GetRecordByAccountId(userId.Value);
+            Record record = await _context.GetRecordByAccountId(userId.Value);
 
             IBotCommand handler = null;
             string commandText = text.Split(' ').FirstOrDefault();

@@ -58,7 +58,7 @@ namespace WebToTelegramCore.Services
         /// <param name="request">Request to handle.</param>
         private async Task HandleRequestInternally(Request request)
         {
-            var record = _context.GetRecordByToken(request.Token);
+            var record = await _context.GetRecordByToken(request.Token);
             if (record == null)
             {
                 throw new TokenNotFoundException();
