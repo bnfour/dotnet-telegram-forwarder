@@ -5,8 +5,6 @@ using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Options;
 using WebToTelegramCore.Services;
 
-using Record = WebToTelegramCore.Models.Record;
-
 namespace WebToTelegramCore
 {
     public class Startup
