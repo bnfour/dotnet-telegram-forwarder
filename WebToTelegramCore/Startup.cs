@@ -26,11 +26,12 @@ namespace WebToTelegramCore
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
-            services.AddSingleton<ITokenGeneratorService, TokenGeneratorService>();
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
 
             services.AddScoped<IOwnApiService, OwnApiService>();
             services.AddScoped<ITelegramApiService, TelegramApiService>();
+
+            services.AddTransient<ITokenGeneratorService, TokenGeneratorService>();
 
             // Telegram.Bot's Update class relies on some Newtonsoft attributes,
             // so to deserialize it correctly, we need to use this library as well

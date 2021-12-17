@@ -23,18 +23,12 @@ namespace WebToTelegramCore.Services
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz").ToCharArray();
 
         /// <summary>
-        /// Strong random instance used to generate random tokens.
-        /// </summary>
-        private readonly RandomNumberGenerator _random;
-
-        /// <summary>
         /// Class constructor.
         /// </summary>
         public TokenGeneratorService()
         {
-            // let's pretend we're serious business for a moment
-            _random = RandomNumberGenerator.Create();
             // sanity check for random evenness
+            // TODO consider it to be a warning instead of an exception
             if (256 % _alphabet.Length != 0)
             {
                 throw new ApplicationException("Selected alphabet does not map evenly " +
@@ -49,7 +43,11 @@ namespace WebToTelegramCore.Services
         public string Generate()
         {
             var randomBytes = new byte[_tokenLength];
-            _random.GetBytes(randomBytes);
+            // let's pretend we're serious business for a moment
+            using (var random = RandomNumberGenerator.Create())
+            {
+                random.GetBytes(randomBytes);
+            }
 
             var sb = new StringBuilder();
             foreach (var b in randomBytes)
