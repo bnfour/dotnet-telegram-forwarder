@@ -26,5 +26,19 @@ namespace WebToTelegramCore.Interfaces
         /// </summary>
         /// <param name="accountId">ID of account to send sticker to.</param>
         Task SendTheSticker(long accountId);
+
+        /// <summary>
+        /// Method to manage external webhook for the Telegram API.
+        /// Part one: called to set the webhook on application start.
+        /// </summary>
+        Task SetExternalWebhook();
+
+        /// <summary>
+        /// Method to manage external webhook for the Telegram API.
+        /// Part two: called to remove the webhook gracefully on application exit.
+        /// Not that it makes much sense in an app designed to be run 24/7, but is
+        /// nice to have nonetheless.
+        /// </summary>
+        Task ClearExternalWebhook();
     }
 }
