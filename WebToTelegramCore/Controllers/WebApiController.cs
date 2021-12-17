@@ -47,9 +47,8 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
-            // if the formatting is wrong, we may catch this
-            // TODO maybe narrow down to the specific message, if there are more cases when this is thrown
-            catch (Telegram.Bot.Exceptions.ApiRequestException)
+            // if the formatting is malformed, relay Telegram's "bad request" to the user
+            catch (Telegram.Bot.Exceptions.ApiRequestException ex) when (ex.Message.StartsWith("Bad Request"))
             {
                 return BadRequest();
             }
