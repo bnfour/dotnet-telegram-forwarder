@@ -34,30 +34,37 @@ namespace WebToTelegramCore.Services
         private readonly InputOnlineFile _sticker = new InputOnlineFile(_theStickerID);
 
         /// <summary>
-        /// Constructor that also sets up the webhook.
+        /// Field to store our webhook URL to be advertised to Telegram's API.
+        /// </summary>
+        private readonly string _webhookUrl;
+
+        /// <summary>
+        /// Constructor that get the options required for this service to operate.
         /// </summary>
         /// <param name="options">Options to use.</param>
-        /// <param name="formatter">Formatter to use.</param>
         public TelegramBotService(IOptions<CommonOptions> options)
         {
             _client = new TelegramBotClient(options.Value.Token);
-
             // made unclear that "api" part is needed as well, shot myself in the leg 3 years after
-            var webhookUrl = options.Value.ApiEndpointUrl + "/api/" + options.Value.Token;
-            // don't know whether old version without firing an actual thread still worked,
-            // it was changed as i tried to debug a "connection" issue where wrong config file was loaded
-            Task.Run(() => _client.SetWebhookAsync(webhookUrl,
-               allowedUpdates: new[] { UpdateType.Message })).Wait();
+            _webhookUrl = options.Value.ApiEndpointUrl + "/api/" + options.Value.Token;
         }
 
         /// <summary>
-        /// Destructor that removes the webhook.
+        /// Method to manage external webhook for the Telegram API.
+        /// Part one: called to set the webhook on application start.
         /// </summary>
-        ~TelegramBotService()
+        public async Task SetExternalWebhook()
         {
-            // this probably never worked anyway
-            // TODO think of a better way to acquire/release webhooks
-            Task.Run(() => _client.DeleteWebhookAsync()).Wait();
+            await _client.SetWebhookAsync(_webhookUrl, allowedUpdates: new[] { UpdateType.Message });
+        }
+
+        /// <summary>
+        /// Method to manage external webhook for the Telegram API.
+        /// Part two: called to remove the webhook gracefully on application exit.
+        /// </summary>
+        public async Task ClearExternalWebhook()
+        {
+            await _client.DeleteWebhookAsync();
         }
 
         /// <summary>

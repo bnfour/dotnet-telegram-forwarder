@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using WebToTelegramCore.Interfaces;
 
 namespace WebToTelegramCore
 {
@@ -44,6 +45,12 @@ namespace WebToTelegramCore
 
             var app = builder.Build();
             app.MapControllers();
+
+            app.Lifetime.ApplicationStarted.Register(async () =>
+                await (app.Services.GetService(typeof(ITelegramBotService)) as ITelegramBotService).SetExternalWebhook());
+
+            app.Lifetime.ApplicationStopped.Register(async () =>
+                await (app.Services.GetService(typeof(ITelegramBotService)) as ITelegramBotService).ClearExternalWebhook());
 
             app.Run();
         }
