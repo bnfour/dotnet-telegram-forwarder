@@ -15,10 +15,9 @@ namespace WebToTelegramCore.BotCommands
         /// Template to message, {0} is assembly version.
         /// Written in Telegram's MarkdownV2 with a lot of escaping.
         /// </summary>
-        private const string _template = "**Dotnet Telegram forwarder** v\\. {0}\n\n" +
-            "[Open\\-source\\!](https://github.com/bnfour/dotnet-telegram-forwarder) " +
-            "Powered by \\.NET 6\\.0\\!\\!\\!\n" +
-            "Written by bnfour, August, October 2018; May 2020; December 2021\\.";
+        private const string _template = "**Dotnet Telegram forwarder** v {0}\n\n" +
+            "[Open\\-source\\!](https://github.com/bnfour/dotnet-telegram-forwarder)\n" +
+            "by bnfour, 2018, 2020\\-2022\\.";
 
         /// <summary>
         /// Command's text.

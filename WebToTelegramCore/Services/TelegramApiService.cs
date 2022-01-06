@@ -122,14 +122,14 @@ namespace WebToTelegramCore.Services
             long? userId = update?.Message?.From?.Id;
             string text = update?.Message?.Text;
             // and the update contains everything we need to process it
-            if (userId == null || String.IsNullOrEmpty(text))
+            if (userId == null || string.IsNullOrEmpty(text))
             {
                 return;
             }
             // if user has no record associated, make him a mock one with just an account number,
             // so we know who they are in case we're going to create them a proper one
             Record record = await _context.GetRecordByAccountId(userId.Value)
-                ?? new Record { AccountNumber = userId.Value, Token = null };
+                ?? _recordService.Create(null, userId.Value);
 
             IBotCommand handler = null;
             string commandText = text.Split(' ').FirstOrDefault();

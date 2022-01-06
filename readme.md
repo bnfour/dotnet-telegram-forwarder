@@ -21,7 +21,7 @@ Request's body has this structure:
 }
 ```
 * Token is this service's user identifier, randomly generated per Telegram user, with abilities to withdraw it or replace with a new one anytime. (Implement a cooldown on consequent resets?) It's a 16 characters long string that may contain alphanumerics, and plus and equals signs (So `[0-9a-zA-Z+=]{16}`).  
-* Type is used to select between two supported parse modes: `"plaintext"` for plain text, and `"markdown"` for MarkdownV2 as described in Telegram docs [here](https://core.telegram.org/bots/api#markdownv2-style). If value is not supplied, defaults to `"plaintext"`. These two are separated, because Telegram flavoured Markdown requires escaping for a fairly common plaintext punctuation marks, and Telegram backend (from my experience three years ago, actualize) tends to silently drop malformed Markdown.  
+* Type is used to select between two supported parse modes: `"plaintext"` for plain text, and `"markdown"` for MarkdownV2 as described in Telegram docs [here](https://core.telegram.org/bots/api#markdownv2-style). If value is not supplied, defaults to `"plaintext"`. These two are separated, because Telegram flavoured Markdown requires escaping for a fairly common plaintext punctuation marks.  
 * Message is the text of the message to be sent via the bot. Maximum length is 4096, and preferred encoding is UTF-8.  
 * Silent is boolean to indicate whether them message from the bot in Telegram will come with a notification. Behaves what you'd expect. If not supplied, defaults to `false`. Please note that the end user is able to mute the bot, effectively rendering this option useless.
 
@@ -63,15 +63,10 @@ When there is a destructive (either regeneration or deletion) operation pending,
 You'll need .NET 6 runtime. Hosting on GNU/Linux in a proper data center is highly encouraged.  
 By default, listens on port 8082. This can be changed with `--port <desired port>` command-line argument.  
 Rest of the settings are inside `appsettings.json`:  
-* "General" section contains Telegram's bot token, API endpoint URL as seen from outside world (certainly not localhost:8082 as Kestrel would told you it listens to) and a boolean that controls whether new users can create tokens.  
+* "General" section contains Telegram's bot token, API endpoint URL as seen from outside world (certainly not localhost:8082 as Kestrel would told you it listens to) and a boolean that controls whether new users can create tokens. Please note that `/api` will be appended to this address. So, for example, if you set `https://foo.example.com/bar` here, actual endpoint to be used with the app (both for Telegram API webhooks and for user messages) will be `https://foo.example.com/bar/api`  
 * "Bandwidth" section controls bot's throughput: maximum amount of messages to be delivered at once and amount of seconds to regenerate one message delivery is set here.  
 
-// TODO write about localization string moved somewhere else
-
 To deploy this bot, you'll need something that will append SSL as required by Telegram. As always with Telegram bots, I recommend `nginx` as a reverse proxy. You'll need to set up HTTPS as well.
-
-### Debug
-Short section outlining ngrok usage?
 
 ## Version history
 * **v 1.0**, 2018-08-29  

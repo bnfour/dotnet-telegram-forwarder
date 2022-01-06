@@ -24,7 +24,7 @@ namespace WebToTelegramCore.BotCommands
             "Hello world!",
             "Timeline lost",
             "send help",
-            "`inhale`",
+            "inhale",
             "KNCA KYKY",
             "Hey Red",
             "Powered by .NET!",
@@ -34,7 +34,8 @@ namespace WebToTelegramCore.BotCommands
             "Is it banana time yet?",
             "Try again later",
             "More than two and less than four",
-            "Of course I still love you"
+            "Of course I still love you",
+            "それは何?"
         };
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace WebToTelegramCore.BotCommands
         private string InternalProcess(Record record)
         {
             string text = _examples[new Random().Next(0, _examples.Count)];
-            return String.Format(_templateOne, record.Token, _apiEndpoint, text)
+            return String.Format(_templateOne, record.Token, _apiEndpoint + "/api", text)
                 + "\n\n" + _errors;
         }
     }
