@@ -17,7 +17,7 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         private const string _template = "**Dotnet Telegram forwarder** v {0}\n\n" +
             "[Open\\-source\\!](https://github.com/bnfour/dotnet-telegram-forwarder)\n" +
-            "by bnfour, 2018, 2020\\-2022\\.";
+            "by bnfour, 2018, 2020\\-2023\\.";
 
         /// <summary>
         /// Command's text.

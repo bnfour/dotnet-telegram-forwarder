@@ -60,7 +60,7 @@ The ability for anyone to create a token for themselves is toggleable via config
 When there is a destructive (either regeneration or deletion) operation pending, only `/cancel` or `/confirm` commands are accepted.
 
 ## Configuration and deployment
-You'll need .NET 6 runtime. Hosting on GNU/Linux in a proper data center is highly encouraged.  
+You'll need .NET 7 runtime. Hosting on GNU/Linux in a proper data center is highly encouraged.  
 By default, listens on port 8082. This can be changed with `--port <desired port>` command-line argument.  
 Rest of the settings are inside `appsettings.json`:  
 * "General" section contains Telegram's bot token, API endpoint URL as seen from outside world (certainly not localhost:8082 as Kestrel would told you it listens to) and a boolean that controls whether new users can create tokens. Please note that `/api` will be appended to this address. So, for example, if you set `https://foo.example.com/bar` here, actual endpoint to be used with the app (both for Telegram API webhooks and for user messages) will be `https://foo.example.com/bar/api`  
@@ -75,4 +75,5 @@ Initial release. More an excercise in ASP.NET Core than an app I needed at the m
 Greatly increased the reliability of Markdown parsing in one of the most **not** straightforward ways you can imagine -- by converting the Markdown to HTML with a few custom convertion quirks.
 * **no version number**, 2020-05-14  
 Shelved attempt to improve the codebase. Consists of one architecture change and is fully ~~included~~ rewritten in the next release.
-* TODO the current iteration, version number 1.5? 1.9? Certainly not 2.x _yet_.
+* **v 2.0**, not yet released, (hopefully) in development  
+Really proper markdown support this time (Telegram's version with questionable selection of characters to be escaped), option to send a silent notification, async everthing, and probably something else I forgot about.

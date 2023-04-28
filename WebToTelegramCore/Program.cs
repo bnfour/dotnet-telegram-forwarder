@@ -39,7 +39,6 @@ namespace WebToTelegramCore
             });
 
             // carrying over legacy startup-based configuration (for now?)
-            // lifetime-dependent config (use detailed exception page in dev environment, basically) was dropped (for now?)
             var startup = new Startup(builder.Configuration);
             startup.ConfigureServices(builder.Services);
 
