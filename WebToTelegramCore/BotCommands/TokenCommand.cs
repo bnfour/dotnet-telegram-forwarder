@@ -1,4 +1,5 @@
 ﻿using System;
+using WebToTelegramCore.Helpers;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Resources;
@@ -71,9 +72,10 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Message with token and API usage example.</returns>
         private string InternalProcess(Record record)
         {
-            string text = _examples[new Random().Next(0, _examples.Length)];
-            return String.Format(Locale.TokenTemplate, record.Token, _apiEndpoint + "/api", text)
-                + "\n\n" + Locale.TokenErrorsDescription;
+            var text = _examples[new Random().Next(0, _examples.Length)];
+            return String.Format(Locale.TokenTemplate, TelegramMarkdownFormatter.Escape(record.Token),
+                TelegramMarkdownFormatter.Escape(_apiEndpoint + "/api"), TelegramMarkdownFormatter.Escape(text))
+                + "\n" + Locale.TokenErrorsDescription;
         }
     }
 }

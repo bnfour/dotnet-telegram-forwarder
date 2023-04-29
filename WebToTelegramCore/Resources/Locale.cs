@@ -9,7 +9,7 @@
     // Please note that these should be formatted as Telegram-flavoured Markdown
     // see https://core.telegram.org/bots/api#markdownv2-style
     // Templating parameters (like {0}) are filled in before sending to the API,
-    // so { and } in these should NOT be escaped.
+    // so { and } in these should NOT be escaped. But the actual text in these should be.
 
     public static class Locale
     {
@@ -17,7 +17,7 @@
         /// Template for reply for /about command. {0} is assembly version.
         /// </summary>
         public const string About = """
-        **Dotnet Telegram forwarder** v {0}
+        **Dotnet Telegram forwarder** v {0}\.
 
         [Open\-source\!](https://github.com/bnfour/dotnet-telegram-forwarder)
         by bnfour, 2018, 2020\-2023\.
@@ -120,7 +120,7 @@
         /// Message to show when usage of command requires a token, but user has none.
         /// </summary>
         public const string ErrorMustBeUser = """
-        In order to use this command, you must have a token associated with your account\. /create one\."
+        In order to use this command, you must have a token associated with your account\. /create one\.
         """;
         
         /// <summary>
@@ -192,24 +192,25 @@
         /// Helper text that explains web API output.
         /// </summary>
         public const string TokenErrorsDescription = """
-        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) to see possible error codes\.
+        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) to see error code list\.
         """;
         
         /// <summary>
         /// Template for message to reply to /token command with.
         /// {0} is token, {1} is API endpoint URL, {2} is vanity quote.
         /// </summary>
+        // double braces are escaping for formatting
         public const string TokenTemplate = """
         Your token is
 
         `{0}`
 
-        *Usage:* To deliver a message, send a POST request to {1} with JSON body\. The payload must contain two parameters: your token and your message\. There are also optional parameters, please consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) for details\. Example of a bare minimum payload:
+        *Usage:* To deliver a message, send a POST request to {1} with JSON body\. The payload must contain two parameters: your token and your message\. There are also optional parameters, please consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) for details\. Example of a payload:
         ```
-        {
+        {{
             "token": "{0}",
             "message": "{2}"
-        }
+        }}
         ```
         """;
     }

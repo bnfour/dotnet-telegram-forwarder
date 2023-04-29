@@ -49,7 +49,7 @@ namespace WebToTelegramCore.Services
 
             if (record.UsageCounter > 0)
             {
-                record.LastSuccessTimestamp = DateTime.Now;
+                record.LastSuccessTimestamp = DateTime.UtcNow;
                 record.UsageCounter--;
                 return true;
             }
