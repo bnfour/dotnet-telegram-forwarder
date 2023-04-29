@@ -1,7 +1,7 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -36,8 +36,8 @@ namespace WebToTelegramCore.BotCommands
             }
 
             string reply = record.State == RecordState.PendingDeletion
-                ? LocalizationOptions.CancelDeletion
-                : LocalizationOptions.CancelRegeneration;
+                ? Locale.CancelDeletion
+                : Locale.CancelRegeneration;
 
             record.State = RecordState.Normal;
             return reply;

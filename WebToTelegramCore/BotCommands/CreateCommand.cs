@@ -1,7 +1,7 @@
 ﻿using System;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -76,11 +76,11 @@ namespace WebToTelegramCore.BotCommands
                 var r = _recordService.Create(token, record.AccountNumber);
                 _context.Add(r);
                 _context.SaveChanges();
-                return String.Format(LocalizationOptions.CreateSuccess, token);
+                return String.Format(Locale.CreateSuccess, token);
             }
             else
             {
-                return LocalizationOptions.CreateGoAway;
+                return Locale.CreateGoAway;
             }
         }
     }

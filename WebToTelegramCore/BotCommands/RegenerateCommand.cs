@@ -1,7 +1,7 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -39,7 +39,7 @@ namespace WebToTelegramCore.BotCommands
         private string InternalProcess(Record record)
         {
             record.State = RecordState.PendingRegeneration;
-            return LocalizationOptions.RegenerationPending;
+            return Locale.RegenerationPending;
         }
     }
 }

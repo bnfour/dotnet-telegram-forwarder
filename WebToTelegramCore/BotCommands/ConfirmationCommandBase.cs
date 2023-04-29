@@ -1,7 +1,7 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -32,7 +32,7 @@ namespace WebToTelegramCore.BotCommands
         public virtual string Process(Record record)
         {
             return (string.IsNullOrEmpty(record.Token) || record.State == RecordState.Normal)
-                ? LocalizationOptions.ErrorNoConfirmationPending
+                ? Locale.ErrorNoConfirmationPending
                 : null;
         }
     }

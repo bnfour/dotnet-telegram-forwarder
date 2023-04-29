@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -38,8 +38,8 @@ namespace WebToTelegramCore.BotCommands
         /// corresponding error message otherwise.</returns>
         public override string Process(Record record)
         {
-            string appendix = _isRegistrationOpen ? LocalizationOptions.StartRegistrationHint : LocalizationOptions.StartGoAway;
-            return base.Process(record) ?? LocalizationOptions.StartMessage + "\n\n" + appendix;
+            string appendix = _isRegistrationOpen ? Locale.StartRegistrationHint : Locale.StartGoAway;
+            return base.Process(record) ?? Locale.StartMessage + "\n\n" + appendix;
         }
     }
 }

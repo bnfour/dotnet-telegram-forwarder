@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -36,7 +36,7 @@ namespace WebToTelegramCore.BotCommands
         {
             return string.IsNullOrEmpty(record.Token)
                 ? null
-                : LocalizationOptions.ErrorMustBeGuest;
+                : Locale.ErrorMustBeGuest;
         }
     }
 }

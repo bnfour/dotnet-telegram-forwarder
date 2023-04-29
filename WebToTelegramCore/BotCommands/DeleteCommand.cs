@@ -1,7 +1,7 @@
 ﻿using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -50,8 +50,8 @@ namespace WebToTelegramCore.BotCommands
         {
             record.State = RecordState.PendingDeletion;
             return _registrationEnabled
-                ? LocalizationOptions.DeletionPending
-                : LocalizationOptions.DeletionPending + "\n\n" + LocalizationOptions.DeletionNoTurningBack;
+                ? Locale.DeletionPending
+                : Locale.DeletionPending + "\n\n" + Locale.DeletionNoTurningBack;
         }
     }
 }

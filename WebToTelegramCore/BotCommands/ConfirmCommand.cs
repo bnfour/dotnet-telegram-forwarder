@@ -2,7 +2,7 @@
 using WebToTelegramCore.Data;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -82,7 +82,7 @@ namespace WebToTelegramCore.BotCommands
             _context.Remove(record);
             _context.Add(newRecord);
             _context.SaveChanges();
-            return String.Format(LocalizationOptions.ConfirmRegeneration, newToken);
+            return String.Format(Locale.ConfirmRegeneration, newToken);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace WebToTelegramCore.BotCommands
         {
             _context.Remove(record);
             _context.SaveChanges();
-            return LocalizationOptions.ConfirmDeletion;
+            return Locale.ConfirmDeletion;
         }
     }
 }

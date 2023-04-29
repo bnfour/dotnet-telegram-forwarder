@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -73,8 +72,8 @@ namespace WebToTelegramCore.BotCommands
         private string InternalProcess(Record record)
         {
             string text = _examples[new Random().Next(0, _examples.Length)];
-            return String.Format(LocalizationOptions.TokenTemplate, record.Token, _apiEndpoint + "/api", text)
-                + "\n\n" + LocalizationOptions.TokenErrorsDescription;
+            return String.Format(Locale.TokenTemplate, record.Token, _apiEndpoint + "/api", text)
+                + "\n\n" + Locale.TokenErrorsDescription;
         }
     }
 }

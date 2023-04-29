@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -28,7 +28,7 @@ namespace WebToTelegramCore.BotCommands
         /// corresponding error message otherwise.</returns>
         public override string Process(Record record)
         {
-            return base.Process(record) ?? LocalizationOptions.Help;
+            return base.Process(record) ?? Locale.Help;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WebToTelegramCore.Options
+﻿namespace WebToTelegramCore.Resources
 {
     /// <summary>
     /// Class that holds all customizable string the bot may reply with.
@@ -11,7 +11,7 @@
     // Templating parameters (like {0}) are filled in before sending to the API,
     // so { and } in these should NOT be escaped.
 
-    public static class LocalizationOptions
+    public static class Locale
     {
         /// <summary>
         /// Template for reply for /about command. {0} is assembly version.

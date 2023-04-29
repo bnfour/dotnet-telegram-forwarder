@@ -10,6 +10,7 @@ using WebToTelegramCore.BotCommands;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.Services
 {
@@ -150,8 +151,8 @@ namespace WebToTelegramCore.Services
             else
             {
                 string reply = text.StartsWith("/")
-                    ? LocalizationOptions.ErrorDave
-                    : LocalizationOptions.ErrorWhat;
+                    ? Locale.ErrorDave
+                    : Locale.ErrorWhat;
                 await _bot.Send(accountId, reply);
             }
         }

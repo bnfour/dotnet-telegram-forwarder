@@ -2,7 +2,7 @@
 using System.Reflection;
 using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -32,7 +32,7 @@ namespace WebToTelegramCore.BotCommands
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             // imagine having to escape dot for "markdown"
             var prettyVersion = $"{version.Major}\\.{version.Minor}";
-            return base.Process(record) ?? String.Format(LocalizationOptions.About, prettyVersion);
+            return base.Process(record) ?? String.Format(Locale.About, prettyVersion);
         }
     }
 }
