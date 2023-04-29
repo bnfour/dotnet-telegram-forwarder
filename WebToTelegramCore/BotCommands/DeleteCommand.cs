@@ -17,16 +17,6 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/delete";
 
         /// <summary>
-        /// Message that confirms deletion is now pending.
-        /// </summary>
-        private readonly string _message;
-
-        /// <summary>
-        /// Additional warning shown when registration is turned off.
-        /// </summary>
-        private readonly string _noTurningBack;
-
-        /// <summary>
         /// Boolean that indicates whether this instance is accepting new users.
         /// True if it does.
         /// </summary>
@@ -35,15 +25,10 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="registrationEnabled">Registration state. True is enabled.</param>
-        public DeleteCommand(LocalizationOptions locale, bool registrationEnabled)
-            : base(locale)
+        public DeleteCommand(bool registrationEnabled) : base()
         {
             _registrationEnabled = registrationEnabled;
-
-            _message = locale.DeletionPending;
-            _noTurningBack = locale.DeletionNoTurningBack;
         }
 
         /// <summary>
@@ -64,7 +49,9 @@ namespace WebToTelegramCore.BotCommands
         private string InternalProcess(Record record)
         {
             record.State = RecordState.PendingDeletion;
-            return _registrationEnabled ? _message : _message + "\n\n" + _noTurningBack;
+            return _registrationEnabled
+                ? LocalizationOptions.DeletionPending
+                : LocalizationOptions.DeletionPending + "\n\n" + LocalizationOptions.DeletionNoTurningBack;
         }
     }
 }

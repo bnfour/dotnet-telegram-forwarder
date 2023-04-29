@@ -7,22 +7,11 @@ using WebToTelegramCore.Options;
 namespace WebToTelegramCore.BotCommands
 {
     /// <summary>
-    /// Class that implements /cancel command which either deletes user's token or
-    /// replaces it with a new one.
+    /// Class that implements /confirm command which either deletes user's token or
+    /// replaces it with a new one after a request via previous command.
     /// </summary>
     public class ConfirmCommand : ConfirmationCommandBase, IBotCommand
     {
-        /// <summary>
-        /// Message to display when token is deleted.
-        /// </summary>
-        private readonly string _deletion;
-
-        /// <summary>
-        /// Format string for message about token regeneration. The only argument {0}
-        /// is a newly generated token.
-        /// </summary>
-        private readonly string _regenration;
-
         /// <summary>
         /// Command's text.
         /// </summary>
@@ -46,19 +35,15 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator to use.</param>
         /// <param name="recordService">Record helper to use.</param>
-        public ConfirmCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator, IRecordService recordService) : base(locale)
+        public ConfirmCommand(RecordContext context, ITokenGeneratorService generator,
+            IRecordService recordService) : base()
         {
             _context = context;
             _tokenGenerator = generator;
             _recordService = recordService;
-
-            _deletion = locale.ConfirmDeletion;
-            _regenration = locale.ConfirmRegeneration;
         }
 
         /// <summary>
@@ -97,7 +82,7 @@ namespace WebToTelegramCore.BotCommands
             _context.Remove(record);
             _context.Add(newRecord);
             _context.SaveChanges();
-            return String.Format(_regenration, newToken);
+            return String.Format(LocalizationOptions.ConfirmRegeneration, newToken);
         }
 
         /// <summary>
@@ -109,7 +94,7 @@ namespace WebToTelegramCore.BotCommands
         {
             _context.Remove(record);
             _context.SaveChanges();
-            return _deletion;
+            return LocalizationOptions.ConfirmDeletion;
         }
     }
 }

@@ -36,10 +36,8 @@ namespace WebToTelegramCore
             // so to deserialize it correctly, we need to use this library as well
             services.AddControllers().AddNewtonsoftJson();
 
-            // Options pattern to the rescue?
             services.Configure<CommonOptions>(Configuration.GetSection("General"));
             services.Configure<BandwidthOptions>(Configuration.GetSection("Bandwidth"));
-            services.Configure<LocalizationOptions>(Configuration.GetSection("Strings"));
         }
     }
 }

@@ -16,16 +16,6 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/create";
 
         /// <summary>
-        /// Message to display on token creation. Must be formatted, {0} is token.
-        /// </summary>
-        private readonly string _message;
-
-        /// <summary>
-        /// Message to display when registration is off.
-        /// </summary>
-        private readonly string _goAway;
-
-        /// <summary>
         /// Field to store database context reference.
         /// </summary>
         private readonly RecordContext _context;
@@ -48,22 +38,18 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor that injects dependencies and sets up registration state.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator service to use.</param>
         /// <param name="recordService">Record helper service to use.</param>
         /// <param name="isRegistrationEnabled">State of registration.</param>
-        public CreateCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator, IRecordService recordService, bool isRegistrationEnabled) : base(locale)
+        public CreateCommand(RecordContext context, ITokenGeneratorService generator,
+            IRecordService recordService, bool isRegistrationEnabled) : base()
         {
             _context = context;
             _generator = generator;
             _recordService = recordService;
 
             _isRegistrationEnabled = isRegistrationEnabled;
-
-            _message = locale.CreateSuccess;
-            _goAway = locale.CreateGoAway;
         }
 
         /// <summary>
@@ -90,11 +76,11 @@ namespace WebToTelegramCore.BotCommands
                 var r = _recordService.Create(token, record.AccountNumber);
                 _context.Add(r);
                 _context.SaveChanges();
-                return String.Format(_message, token);
+                return String.Format(LocalizationOptions.CreateSuccess, token);
             }
             else
             {
-                return _goAway;
+                return LocalizationOptions.CreateGoAway;
             }
         }
     }

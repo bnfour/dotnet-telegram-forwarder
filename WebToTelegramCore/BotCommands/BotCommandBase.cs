@@ -12,24 +12,14 @@ namespace WebToTelegramCore.BotCommands
     public abstract class BotCommandBase : IBotCommand
     {
         /// <summary>
-        /// Text somewhat explaining why processing of this Record
-        /// was cancelled in this class.
-        /// </summary>
-        private readonly string _error;
-
-        /// <summary>
         /// Command text; not implemented in abstract classes.
         /// </summary>
         public abstract string Command { get; }
 
         /// <summary>
-        /// Constructor that sets error message.
+        /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
-        public BotCommandBase(LocalizationOptions locale)
-        {
-            _error = locale.ErrorConfirmationPending;
-        }
+        public BotCommandBase() { }
 
         /// <summary>
         /// Method of abstract base class that filters out users with pending
@@ -40,8 +30,9 @@ namespace WebToTelegramCore.BotCommands
         /// or null otherwise.</returns>
         public virtual string Process(Record record)
         {
-            return (!string.IsNullOrEmpty(record.Token) && record.State != RecordState.Normal) ?
-                _error : null;
+            return (!string.IsNullOrEmpty(record.Token) && record.State != RecordState.Normal)
+                ? LocalizationOptions.ErrorConfirmationPending
+                : null;
         }
     }
 }

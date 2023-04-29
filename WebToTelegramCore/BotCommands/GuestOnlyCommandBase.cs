@@ -11,19 +11,10 @@ namespace WebToTelegramCore.BotCommands
     public abstract class GuestOnlyCommandBase : BotCommandBase, IBotCommand
     {
         /// <summary>
-        /// Text somewhat explaining why processing of this Record
-        /// was cancelled in this class.
-        /// </summary>
-        private readonly string _error;
-
-        /// <summary>
         /// Constructor that sets up error message.
         /// </summary>
         /// <param name="locale">Locale options to use.</param>
-        public GuestOnlyCommandBase(LocalizationOptions locale) : base(locale)
-        {
-            _error = locale.ErrorMustBeGuest;
-        }
+        public GuestOnlyCommandBase() : base() { }
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users
@@ -43,7 +34,9 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Error message if user has a token, or null otherwise.</returns>
         private string InternalProcess(Record record)
         {
-            return string.IsNullOrEmpty(record.Token) ? null : _error;
+            return string.IsNullOrEmpty(record.Token)
+                ? null
+                : LocalizationOptions.ErrorMustBeGuest;
         }
     }
 }

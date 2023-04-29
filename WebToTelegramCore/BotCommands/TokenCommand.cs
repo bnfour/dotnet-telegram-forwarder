@@ -19,7 +19,7 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Random quotes to display as message example.
         /// </summary>
-        private readonly List<string> _examples = new List<string>()
+        private readonly string[] _examples = new[]
         {
             "Hello world!",
             "Timeline lost",
@@ -35,7 +35,9 @@ namespace WebToTelegramCore.BotCommands
             "Try again later",
             "More than two and less than four",
             "Of course I still love you",
-            "それは何?"
+            "それは何?",
+            "There was nothing to be sad about",
+            "I never asked for this"
         };
 
         /// <summary>
@@ -44,28 +46,12 @@ namespace WebToTelegramCore.BotCommands
         private readonly string _apiEndpoint;
 
         /// <summary>
-        /// Template for reply with three formatters: {0} is token, {1} is API endpoint,
-        /// {2} is random vanity message example.
-        /// </summary>
-        private readonly string _templateOne;
-
-        /// <summary>
-        /// Message explaining Response structure and roles of its fields.
-        /// </summary>
-        private readonly string _errors;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="apiEndpoint">API endpoint URL.</param>
-        public TokenCommand(LocalizationOptions locale, string apiEndpoint)
-            : base(locale)
+        public TokenCommand(string apiEndpoint) : base()
         {
             _apiEndpoint = apiEndpoint;
-
-            _templateOne = locale.TokenTemplate;
-            _errors = locale.TokenErrorsDescription;
         }
 
         /// <summary>
@@ -86,9 +72,9 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Message with token and API usage example.</returns>
         private string InternalProcess(Record record)
         {
-            string text = _examples[new Random().Next(0, _examples.Count)];
-            return String.Format(_templateOne, record.Token, _apiEndpoint + "/api", text)
-                + "\n\n" + _errors;
+            string text = _examples[new Random().Next(0, _examples.Length)];
+            return String.Format(LocalizationOptions.TokenTemplate, record.Token, _apiEndpoint + "/api", text)
+                + "\n\n" + LocalizationOptions.TokenErrorsDescription;
         }
     }
 }

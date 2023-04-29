@@ -17,18 +17,9 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/regenerate";
 
         /// <summary>
-        /// Message that confirms regeneration is now pending.
+        /// Constructor.
         /// </summary>
-        private readonly string _message;
-
-        /// <summary>
-        /// Constructor that sets up message.
-        /// </summary>
-        /// <param name="locale">Locale options to use.</param>
-        public RegenerateCommand(LocalizationOptions locale) : base(locale)
-        {
-            _message = locale.RegenerationPending;
-        }
+        public RegenerateCommand() : base() { }
 
         /// <summary>
         /// Method to process the command.
@@ -48,7 +39,7 @@ namespace WebToTelegramCore.BotCommands
         private string InternalProcess(Record record)
         {
             record.State = RecordState.PendingRegeneration;
-            return _message;
+            return LocalizationOptions.RegenerationPending;
         }
     }
 }

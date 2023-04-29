@@ -49,34 +49,16 @@ namespace WebToTelegramCore.Services
         private readonly List<IBotCommand> _commands;
 
         /// <summary>
-        /// Indicates whether usage of /create command is enabled.
-        /// </summary>
-        private readonly bool _isRegistrationOpen;
-
-        /// <summary>
-        /// Message to reply with when input is starting with slash, but none of the
-        /// commands fired in response.
-        /// </summary>
-        private readonly string _invalidCommandReply;
-
-        /// <summary>
-        /// Message to reply with when input isn't even resembles a command.
-        /// </summary>
-        private readonly string _invalidReply;
-
-        /// <summary>
         /// Constructor that injects dependencies and configures list of commands.
         /// </summary>
         /// <param name="options">Options that include token.</param>
-        /// <param name="locale">Localization options.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service instance to use.</param>
         /// <param name="generator">Token generator service to use.</param>
         /// <param name="recordService">Record helper service to use.</param>
-        public TelegramApiService(IOptions<CommonOptions> options, 
-            IOptions<LocalizationOptions> locale, RecordContext context,
-            ITelegramBotService bot, ITokenGeneratorService generator,
-            IRecordService recordService)
+        public TelegramApiService(IOptions<CommonOptions> options,
+            RecordContext context, ITelegramBotService bot,
+            ITokenGeneratorService generator, IRecordService recordService)
         {
             _token = options.Value.Token;
             _context = context;
@@ -84,25 +66,20 @@ namespace WebToTelegramCore.Services
             _generator = generator;
             _recordService = recordService;
 
-            _isRegistrationOpen = options.Value.RegistrationEnabled;
-
-            LocalizationOptions locOptions = locale.Value;
-
-            _invalidCommandReply = locOptions.ErrorDave;
-            _invalidReply = locOptions.ErrorWhat;
+            var isRegistrationOpen = options.Value.RegistrationEnabled;
 
             _commands = new List<IBotCommand>()
             {
-                new StartCommand(locOptions, _isRegistrationOpen),
-                new TokenCommand(locOptions, options.Value.ApiEndpointUrl),
-                new RegenerateCommand(locOptions),
-                new DeleteCommand(locOptions, _isRegistrationOpen),
-                new ConfirmCommand(locOptions, _context, _generator, _recordService),
-                new CancelCommand(locOptions),
-                new HelpCommand(locOptions),
-                new DirectiveCommand(locOptions),
-                new AboutCommand(locOptions),
-                new CreateCommand(locOptions, _context, _generator, _recordService, _isRegistrationOpen)
+                new StartCommand(isRegistrationOpen),
+                new TokenCommand(options.Value.ApiEndpointUrl),
+                new RegenerateCommand(),
+                new DeleteCommand(isRegistrationOpen),
+                new ConfirmCommand(_context, _generator, _recordService),
+                new CancelCommand(),
+                new HelpCommand(),
+                new DirectiveCommand(),
+                new AboutCommand(),
+                new CreateCommand(_context, _generator, _recordService, isRegistrationOpen)
             };
         }
 
@@ -172,7 +149,9 @@ namespace WebToTelegramCore.Services
             }
             else
             {
-                string reply = text.StartsWith("/") ? _invalidCommandReply : _invalidReply;
+                string reply = text.StartsWith("/")
+                    ? LocalizationOptions.ErrorDave
+                    : LocalizationOptions.ErrorWhat;
                 await _bot.Send(accountId, reply);
             }
         }
