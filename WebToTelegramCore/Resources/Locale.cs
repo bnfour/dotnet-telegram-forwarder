@@ -187,14 +187,7 @@
         public const string StartRegistrationHint = """
         If that does not stop you, feel free to /create your very own token\.
         """;
-        
-        /// <summary>
-        /// Helper text that explains web API output.
-        /// </summary>
-        public const string TokenErrorsDescription = """
-        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) to see error code list\.
-        """;
-        
+
         /// <summary>
         /// Template for message to reply to /token command with.
         /// {0} is token, {1} is API endpoint URL, {2} is vanity quote.
@@ -212,6 +205,8 @@
             "message": "{2}"
         }}
         ```
+
+        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) to see error code list\.
         """;
     }
 }

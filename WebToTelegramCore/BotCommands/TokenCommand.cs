@@ -74,8 +74,7 @@ namespace WebToTelegramCore.BotCommands
         {
             var text = _examples[new Random().Next(0, _examples.Length)];
             return String.Format(Locale.TokenTemplate, TelegramMarkdownFormatter.Escape(record.Token),
-                TelegramMarkdownFormatter.Escape(_apiEndpoint + "/api"), TelegramMarkdownFormatter.Escape(text))
-                + "\n" + Locale.TokenErrorsDescription;
+                TelegramMarkdownFormatter.Escape(_apiEndpoint + "/api"), TelegramMarkdownFormatter.Escape(text));
         }
     }
 }
