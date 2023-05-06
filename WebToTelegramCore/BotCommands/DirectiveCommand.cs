@@ -1,5 +1,5 @@
-﻿using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+﻿using WebToTelegramCore.Interfaces;
+using WebToTelegramCore.Models;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -24,8 +24,7 @@ namespace WebToTelegramCore.BotCommands
         /// Constructor that does literally nothing yet required due to my "superb"
         /// planning skills.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
-        public DirectiveCommand(LocalizationOptions locale) : base(locale) { }
+        public DirectiveCommand() : base() { }
 
         /// <summary>
         /// Method to process the command.

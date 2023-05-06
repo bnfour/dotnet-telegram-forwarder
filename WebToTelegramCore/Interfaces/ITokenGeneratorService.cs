@@ -1,4 +1,4 @@
-﻿namespace WebToTelegramCore.Services
+﻿namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to services that generate auth tokens.

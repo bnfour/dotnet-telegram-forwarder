@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Linq;
 using System.Text;
+using WebToTelegramCore.Interfaces;
 
 namespace WebToTelegramCore.Services
 {
@@ -22,18 +24,19 @@ namespace WebToTelegramCore.Services
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz").ToCharArray();
 
         /// <summary>
-        /// Strong random instance used to generate random tokens.
+        /// DB context. Used to check for collisions with existing tokens.
         /// </summary>
-        private readonly RandomNumberGenerator _random;
+        private readonly RecordContext _context;
 
         /// <summary>
         /// Class constructor.
         /// </summary>
-        public TokenGeneratorService()
+        public TokenGeneratorService(RecordContext context)
         {
-            // let's pretend we're serious business for a moment
-            _random = RandomNumberGenerator.Create();
+            _context = context;
+
             // sanity check for random evenness
+            // TODO consider it to be a warning instead of an exception
             if (256 % _alphabet.Length != 0)
             {
                 throw new ApplicationException("Selected alphabet does not map evenly " +
@@ -42,13 +45,33 @@ namespace WebToTelegramCore.Services
         }
 
         /// <summary>
-        /// Token generation method.
+        /// Generates a token and ensures it is not yet assigned to other accounts.
         /// </summary>
-        /// <returns>Token.</returns>
+        /// <returns>An unique token.</returns>
         public string Generate()
         {
+            string token = null;
+            var done = false;
+            while (!done)
+            {
+                token = GenerateRandom();
+                done = !_context.Records.Any(r => r.Token == token);
+            }
+            return token;
+        }
+
+        /// <summary>
+        /// Actual token generation method.
+        /// </summary>
+        /// <returns>A completely random token.</returns>
+        private string GenerateRandom()
+        {
             var randomBytes = new byte[_tokenLength];
-            _random.GetBytes(randomBytes);
+            // let's pretend we're serious business for a moment
+            using (var random = RandomNumberGenerator.Create())
+            {
+                random.GetBytes(randomBytes);
+            }
 
             var sb = new StringBuilder();
             foreach (var b in randomBytes)

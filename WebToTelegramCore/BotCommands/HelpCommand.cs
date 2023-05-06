@@ -1,5 +1,6 @@
-﻿using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+﻿using WebToTelegramCore.Interfaces;
+using WebToTelegramCore.Models;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -14,18 +15,9 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/help";
 
         /// <summary>
-        /// Helpful help message to send.
+        /// Constructor.
         /// </summary>
-        private readonly string _message;
-
-        /// <summary>
-        /// Constructor that sets up message.
-        /// </summary>
-        /// <param name="locale">Locale options to use.</param>
-        public HelpCommand(LocalizationOptions locale) : base(locale)
-        {
-            _message = locale.Help;
-        }
+        public HelpCommand() : base() { }
 
         /// <summary>
         /// Method to process the command.
@@ -36,7 +28,7 @@ namespace WebToTelegramCore.BotCommands
         /// corresponding error message otherwise.</returns>
         public override string Process(Record record)
         {
-            return base.Process(record) ?? _message;
+            return base.Process(record) ?? Locale.Help;
         }
     }
 }

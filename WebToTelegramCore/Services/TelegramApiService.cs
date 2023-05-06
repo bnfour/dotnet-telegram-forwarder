@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 using WebToTelegramCore.BotCommands;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
 using WebToTelegramCore.Options;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.Services
 {
@@ -37,79 +40,58 @@ namespace WebToTelegramCore.Services
         private readonly ITokenGeneratorService _generator;
 
         /// <summary>
+        /// Record manipulation service helper reference.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// List of commands available to the bot.
         /// </summary>
         private readonly List<IBotCommand> _commands;
 
         /// <summary>
-        /// /create handler, as it requires special treating since i'm bad at programming.
-        /// </summary>
-        private readonly CreateCommand _thatOneCommand;
-
-        /// <summary>
-        /// Indicates whether usage of /create command is enabled.
-        /// </summary>
-        private readonly bool _isRegistrationOpen;
-
-        /// <summary>
-        /// Message to reply with when input is starting with slash, but none of the
-        /// commands fired in response.
-        /// </summary>
-        private readonly string _invalidCommandReply;
-
-        /// <summary>
-        /// Message to reply with when input isn't even resembles a command.
-        /// </summary>
-        private readonly string _invalidReply;
-
-        /// <summary>
         /// Constructor that injects dependencies and configures list of commands.
         /// </summary>
         /// <param name="options">Options that include token.</param>
-        /// <param name="locale">Localization options.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="bot">Bot service instance to use.</param>
         /// <param name="generator">Token generator service to use.</param>
-        public TelegramApiService(IOptions<CommonOptions> options, 
-            IOptions<LocalizationOptions> locale, RecordContext context,
-            ITelegramBotService bot, ITokenGeneratorService generator)
+        /// <param name="recordService">Record helper service to use.</param>
+        public TelegramApiService(IOptions<CommonOptions> options,
+            RecordContext context, ITelegramBotService bot,
+            ITokenGeneratorService generator, IRecordService recordService)
         {
             _token = options.Value.Token;
             _context = context;
             _bot = bot;
             _generator = generator;
+            _recordService = recordService;
 
-            _isRegistrationOpen = options.Value.RegistrationEnabled;
-
-            LocalizationOptions locOptions = locale.Value;
-
-            _invalidCommandReply = locOptions.ErrorDave;
-            _invalidReply = locOptions.ErrorWhat;
+            var isRegistrationOpen = options.Value.RegistrationEnabled;
 
             _commands = new List<IBotCommand>()
             {
-                new StartCommand(locOptions, _isRegistrationOpen),
-                new TokenCommand(locOptions, options.Value.ApiEndpointUrl),
-                new RegenerateCommand(locOptions),
-                new DeleteCommand(locOptions, _isRegistrationOpen),
-                new ConfirmCommand(locOptions, _context, _generator),
-                new CancelCommand(locOptions),
-                new HelpCommand(locOptions),
-                new DirectiveCommand(locOptions),
-                new AboutCommand(locOptions)
-
+                new StartCommand(isRegistrationOpen),
+                new TokenCommand(options.Value.ApiEndpointUrl),
+                new RegenerateCommand(),
+                new DeleteCommand(isRegistrationOpen),
+                new ConfirmCommand(_context, _generator, _recordService),
+                new CancelCommand(),
+                new HelpCommand(),
+                new DirectiveCommand(),
+                new AboutCommand(),
+                new CreateCommand(_context, _generator, _recordService, isRegistrationOpen)
             };
-            _thatOneCommand = new CreateCommand(locOptions, _context, _generator,
-                _isRegistrationOpen);
         }
 
         /// <summary>
         /// Method to handle incoming updates from the webhook.
         /// </summary>
         /// <param name="update">Received update.</param>
-        public void HandleUpdate(Update update)
+        public async Task HandleUpdate(Update update)
         {
-            // a few sanity checks
+            // a few sanity checks:
+            // only handles text messages, hopefully commands
             if (update.Message.Type != MessageType.Text)
             {
                 return;
@@ -117,32 +99,27 @@ namespace WebToTelegramCore.Services
 
             long? userId = update?.Message?.From?.Id;
             string text = update?.Message?.Text;
-
-            if (userId == null || String.IsNullOrEmpty(text))
+            // and the update contains everything we need to process it
+            if (userId == null || string.IsNullOrEmpty(text))
             {
                 return;
             }
-            // null check was done above, it's safe to use userId.Value directly
-            Record record = _context.GetRecordByAccountId(userId.Value);
+            // if user has no record associated, make him a mock one with just an account number,
+            // so we know who they are in case we're going to create them a proper one
+            Record record = await _context.GetRecordByAccountId(userId.Value)
+                ?? _recordService.Create(null, userId.Value);
 
             IBotCommand handler = null;
-            if (text.StartsWith(_thatOneCommand.Command))
-            {
-                handler = _thatOneCommand;
-                _thatOneCommand.Crutch = userId.Value;
-            }
-            else
-            {
-                _thatOneCommand.Crutch = null;
-                handler = _commands.SingleOrDefault(c => text.StartsWith(c.Command));
-            }
+            string commandText = text.Split(' ').FirstOrDefault();
+            // will crash if multiple command classes share same text, who cares
+            handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
             if (handler != null)
             {
-                _bot.SendPureMarkdown(userId.Value, handler.Process(record));
+                await _bot.Send(userId.Value, handler.Process(record));
             }
             else
             {
-                HandleUnknownText(userId.Value, text);
+                await HandleUnknownText(userId.Value, commandText);
             }
         }
 
@@ -164,18 +141,19 @@ namespace WebToTelegramCore.Services
         /// <param name="accountId">User to reply to.</param>
         /// <param name="text">Received message that was not processed
         /// by actual commands.</param>
-        private void HandleUnknownText(long accountId, string text)
+        private async Task HandleUnknownText(long accountId, string text)
         {
             // suddenly, cat!
             if (new Random().Next(0, 19) == 0)
             {
-                _bot.SendTheSticker(accountId);
+                await _bot.SendTheSticker(accountId);
             }
             else
             {
-                string reply = text.StartsWith("/") ?
-                    _invalidCommandReply : _invalidReply;
-                _bot.Send(accountId, reply);
+                string reply = text.StartsWith("/")
+                    ? Locale.ErrorDave
+                    : Locale.ErrorWhat;
+                await _bot.Send(accountId, reply);
             }
         }
     }

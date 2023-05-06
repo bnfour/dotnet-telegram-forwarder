@@ -1,28 +1,17 @@
 ﻿using System;
 using WebToTelegramCore.Data;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
-using WebToTelegramCore.Services;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
     /// <summary>
-    /// Class that implements /cancel command which either deletes user's token or
-    /// replaces it with a new one.
+    /// Class that implements /confirm command which either deletes user's token or
+    /// replaces it with a new one after a request via previous command.
     /// </summary>
     public class ConfirmCommand : ConfirmationCommandBase, IBotCommand
     {
-        /// <summary>
-        /// Message to display when token is deleted.
-        /// </summary>
-        private readonly string _deletion;
-
-        /// <summary>
-        /// Format string for message about token regeneration. The only argument {0}
-        /// is a newly generated token.
-        /// </summary>
-        private readonly string _regenration;
-
         /// <summary>
         /// Command's text.
         /// </summary>
@@ -39,19 +28,22 @@ namespace WebToTelegramCore.BotCommands
         private readonly ITokenGeneratorService _tokenGenerator;
 
         /// <summary>
+        /// Record manipulation service helper reference.
+        /// </summary>
+        private readonly IRecordService _recordService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator to use.</param>
-        public ConfirmCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator) : base(locale)
+        /// <param name="recordService">Record helper to use.</param>
+        public ConfirmCommand(RecordContext context, ITokenGeneratorService generator,
+            IRecordService recordService) : base()
         {
             _context = context;
             _tokenGenerator = generator;
-
-            _deletion = locale.ConfirmDeletion;
-            _regenration = locale.ConfirmRegeneration;
+            _recordService = recordService;
         }
 
         /// <summary>
@@ -85,16 +77,18 @@ namespace WebToTelegramCore.BotCommands
         private string Regenerate(Record record)
         {
             string newToken = _tokenGenerator.Generate();
-            // so apparently, primary key cannot be changed
-            Record newRecord = new Record()
-            {
-                AccountNumber = record.AccountNumber,
-                Token = newToken
-            };
+            // so apparently, primary key cannot be changed,
+            // create a new record and transfer all data but token and state (it's pending regeneration right now)
+            var newRecord = _recordService.Create(newToken, record.AccountNumber);
+            // consider moving these to Create params with default values?
+            newRecord.UsageCounter = record.UsageCounter;
+            newRecord.LastSuccessTimestamp = record.LastSuccessTimestamp;
+
             _context.Remove(record);
             _context.Add(newRecord);
             _context.SaveChanges();
-            return String.Format(_regenration, newToken);
+            
+            return String.Format(Locale.ConfirmRegeneration, newToken);
         }
 
         /// <summary>
@@ -104,9 +98,9 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Message about performed operation.</returns>
         private string Delete(Record record)
         {
-            _context.Records.Remove(record);
+            _context.Remove(record);
             _context.SaveChanges();
-            return _deletion;
+            return Locale.ConfirmDeletion;
         }
     }
 }

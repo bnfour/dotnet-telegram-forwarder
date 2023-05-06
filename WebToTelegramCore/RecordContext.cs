@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-
+using System.Threading.Tasks;
 using WebToTelegramCore.Models;
 
 namespace WebToTelegramCore
@@ -44,18 +42,9 @@ namespace WebToTelegramCore
         /// </summary>
         /// <param name="token">Token to search for in the DB.</param>
         /// <returns>Associated Record or null if none found.</returns>
-        public Record GetRecordByToken(string token)
+        public async Task<Record> GetRecordByToken(string token)
         {
-            Record ret;
-            try
-            {
-                ret = Records.Single(r => r.Token.Equals(token));
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
-            return ret;
+            return await Records.SingleOrDefaultAsync(r => r.Token.Equals(token));
         }
 
         /// <summary>
@@ -63,18 +52,9 @@ namespace WebToTelegramCore
         /// </summary>
         /// <param name="accountId">ID to search for.</param>
         /// <returns>Associated Record or null if none present.</returns>
-        public Record GetRecordByAccountId(long accountId)
+        public async Task<Record> GetRecordByAccountId(long accountId)
         {
-            Record ret;
-            try
-            {
-                ret = Records.Single(r => r.AccountNumber == accountId);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
-            return ret;
+            return await Records.SingleOrDefaultAsync(r => r.AccountNumber == accountId);
         }
     }
 }

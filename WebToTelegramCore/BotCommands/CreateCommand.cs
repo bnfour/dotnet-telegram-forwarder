@@ -1,7 +1,7 @@
 ﻿using System;
+using WebToTelegramCore.Interfaces;
 using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
-using WebToTelegramCore.Services;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -16,16 +16,6 @@ namespace WebToTelegramCore.BotCommands
         public override string Command => "/create";
 
         /// <summary>
-        /// Message to display on token creation. Must be formatted, {0} is token.
-        /// </summary>
-        private readonly string _message;
-
-        /// <summary>
-        /// Message to display when registration is off.
-        /// </summary>
-        private readonly string _goAway;
-
-        /// <summary>
         /// Field to store database context reference.
         /// </summary>
         private readonly RecordContext _context;
@@ -35,15 +25,10 @@ namespace WebToTelegramCore.BotCommands
         /// </summary>
         private readonly ITokenGeneratorService _generator;
 
-        // I'm bad at computer programming:
-        // the existing "architecture" always passes nulls as Records if user have
-        // no record in DB yet. That means it's impossible to create a user :(
-        // so here we go
-        // TODO: do something better
         /// <summary>
-        /// ID of account that sent the command.
+        /// Record manipulation service helper reference.
         /// </summary>
-        public long? Crutch { get; set; }
+        private readonly IRecordService _recordService;
 
         /// <summary>
         /// Field to store whether registration is enabled. True is enabled.
@@ -53,19 +38,18 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor that injects dependencies and sets up registration state.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="context">Database context to use.</param>
         /// <param name="generator">Token generator service to use.</param>
+        /// <param name="recordService">Record helper service to use.</param>
         /// <param name="isRegistrationEnabled">State of registration.</param>
-        public CreateCommand(LocalizationOptions locale, RecordContext context,
-            ITokenGeneratorService generator, bool isRegistrationEnabled) : base(locale)
+        public CreateCommand(RecordContext context, ITokenGeneratorService generator,
+            IRecordService recordService, bool isRegistrationEnabled) : base()
         {
             _context = context;
             _generator = generator;
-            _isRegistrationEnabled = isRegistrationEnabled;
+            _recordService = recordService;
 
-            _message = locale.CreateSuccess;
-            _goAway = locale.CreateGoAway;
+            _isRegistrationEnabled = isRegistrationEnabled;
         }
 
         /// <summary>
@@ -81,27 +65,22 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Actual method that does registration or denies it.
         /// </summary>
-        /// <param name="record">Record to process. _Must be null_.</param>
+        /// <param name="record">Record to process. Is null if working properly.</param>
         /// <returns>Message with new token or message stating that registration
         /// is closed for good.</returns>
         private string InternalProcess(Record record)
         {
-            // record being null is enforced by base calls.
-            if (!Crutch.HasValue)
-            {
-                throw new ApplicationException("Crutch is not set before calling");
-            }
             if (_isRegistrationEnabled)
             {
                 string token = _generator.Generate();
-                Record r = new Record() { AccountNumber = Crutch.Value, Token = token };
+                var r = _recordService.Create(token, record.AccountNumber);
                 _context.Add(r);
                 _context.SaveChanges();
-                return String.Format(_message, token);
+                return String.Format(Locale.CreateSuccess, token);
             }
             else
             {
-                return _goAway;
+                return Locale.CreateGoAway;
             }
         }
     }

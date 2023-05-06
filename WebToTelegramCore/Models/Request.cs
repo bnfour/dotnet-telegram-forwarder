@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
+using WebToTelegramCore.Data;
 
 namespace WebToTelegramCore.Models
 {
@@ -19,5 +22,20 @@ namespace WebToTelegramCore.Models
         /// </summary>
         [Required, StringLength(4096)]
         public string Message { get; set; }
+
+        /// <summary>
+        /// Optional parameter to suppress the notification for the
+        /// message from the bot. If the to true, message will be silent.
+        /// Note that it's possible for the end used to mute the bot so
+        /// this setting will have no effect.
+        /// </summary>
+        public bool Silent { get; set; } = false;
+
+        /// <summary>
+        /// Optional parameter to set parsing mode of the message.
+        /// Defaults to plaintext if not specified.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public MessageParsingType Type { get; set; } = MessageParsingType.Plaintext;
     }
 }

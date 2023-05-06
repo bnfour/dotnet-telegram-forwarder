@@ -1,6 +1,6 @@
 ﻿using WebToTelegramCore.Models;
 
-namespace WebToTelegramCore.BotCommands
+namespace WebToTelegramCore.Interfaces
 {
     /// <summary>
     /// Interface to implement various bot commands without arguments.
@@ -17,8 +17,8 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Method to process received message.
         /// </summary>
-        /// <param name="record">Record associated with user who sent teh command,
-        /// or null if user has no Record (have not received the token).</param>
+        /// <param name="record">Record associated with user who sent the command,
+        /// or a mock Record with everything but account id set to default values.</param>
         /// <returns>Message to send back to user. Markdown is supported.</returns>
         string Process(Record record);
     }

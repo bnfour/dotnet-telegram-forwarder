@@ -1,5 +1,6 @@
-﻿using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+﻿using WebToTelegramCore.Interfaces;
+using WebToTelegramCore.Models;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -8,21 +9,6 @@ namespace WebToTelegramCore.BotCommands
     /// </summary>
     public class StartCommand : BotCommandBase, IBotCommand
     {
-        /// <summary>
-        /// Fisrt part of response to the command which is always displayed.
-        /// </summary>
-        private readonly string _startMessage;
-
-        /// <summary>
-        /// Additional text to display when registration is open.
-        /// </summary>
-        private readonly string _registrationHint;
-
-        /// <summary>
-        /// Additional text to display when registration is closed.
-        /// </summary>
-        private readonly string _noRegistration;
-
         /// <summary>
         /// Field to store current state of registartion of new users.
         /// </summary>
@@ -36,17 +22,11 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="locale">Locale options to use.</param>
         /// <param name="registrationEnabled">Boolean indicating whether registration
         /// is enabled (true) or not.</param>
-        public StartCommand(LocalizationOptions locale, bool registrationEnabled)
-            : base(locale)
+        public StartCommand(bool registrationEnabled) : base()
         {
             _isRegistrationOpen = registrationEnabled;
-
-            _startMessage = locale.StartMessage;
-            _noRegistration = locale.StartGoAway;
-            _registrationHint = locale.StartRegistrationHint;
         }
 
         /// <summary>
@@ -58,8 +38,8 @@ namespace WebToTelegramCore.BotCommands
         /// corresponding error message otherwise.</returns>
         public override string Process(Record record)
         {
-            string appendix = _isRegistrationOpen ? _registrationHint : _noRegistration;
-            return base.Process(record) ?? _startMessage + "\n\n" + appendix;
+            string appendix = _isRegistrationOpen ? Locale.StartRegistrationHint : Locale.StartGoAway;
+            return base.Process(record) ?? Locale.StartMessage + "\n\n" + appendix;
         }
     }
 }

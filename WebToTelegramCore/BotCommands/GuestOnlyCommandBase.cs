@@ -1,5 +1,6 @@
-﻿using WebToTelegramCore.Models;
-using WebToTelegramCore.Options;
+﻿using WebToTelegramCore.Interfaces;
+using WebToTelegramCore.Models;
+using WebToTelegramCore.Resources;
 
 namespace WebToTelegramCore.BotCommands
 {
@@ -10,26 +11,16 @@ namespace WebToTelegramCore.BotCommands
     public abstract class GuestOnlyCommandBase : BotCommandBase, IBotCommand
     {
         /// <summary>
-        /// Text somewhat explaining why processing of this Record
-        /// was cancelled in this class.
-        /// </summary>
-        private readonly string _error;
-
-        /// <summary>
         /// Constructor that sets up error message.
         /// </summary>
         /// <param name="locale">Locale options to use.</param>
-        public GuestOnlyCommandBase(LocalizationOptions locale) : base(locale)
-        {
-            _error = locale.ErrorMustBeGuest;
-        }
+        public GuestOnlyCommandBase() : base() { }
 
         /// <summary>
         /// Method of abstract base class that adds filtering out users
-        /// with no associated token.
-        /// </summary>
+        /// with no associated token. </summary>
         /// <param name="record">Record to process.</param>
-        /// <returns>Error message if there is an operation pending or user has no token,
+        /// <returns>Error message if there is an operation pending or user has a token,
         /// or null otherwise.</returns>
         public new virtual string Process(Record record)
         {
@@ -40,11 +31,12 @@ namespace WebToTelegramCore.BotCommands
         /// Method that filters out users with tokens.
         /// </summary>
         /// <param name="record">Record to process.</param>
-        /// <returns>Error message if user has a token,
-        /// or null otherwise.</returns>
+        /// <returns>Error message if user has a token, or null otherwise.</returns>
         private string InternalProcess(Record record)
         {
-            return record != null ? _error : null;
+            return string.IsNullOrEmpty(record.Token)
+                ? null
+                : Locale.ErrorMustBeGuest;
         }
     }
 }
