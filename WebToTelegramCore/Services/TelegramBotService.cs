@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using System;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -23,15 +22,9 @@ namespace WebToTelegramCore.Services
         private readonly TelegramBotClient _client;
 
         /// <summary>
-        /// Field to store ID of the sticker to be used as an easter egg
+        /// Field to store ID of the sticker to be used as an easter egg.
         /// </summary>
         private const string _theStickerID = "CAACAgIAAxkBAAIBLWRXhjYCsdyPBbQaJNEJlbtzpVKLAAJ6CQAC8UK_BfOoYI7o8z7PLwQ";
-
-        /// <summary>
-        /// Wrapping of sticker ID understandable by the API. We're sending sticker
-        /// that is already in the cloud.
-        /// </summary>
-        private readonly InputOnlineFile _sticker = new InputOnlineFile(_theStickerID);
 
         /// <summary>
         /// Field to store our webhook URL to be advertised to Telegram's API.
@@ -85,14 +78,26 @@ namespace WebToTelegramCore.Services
         }
 
         /// <summary>
+        /// Method to send an arbitrary sticker on behalf of the bot.
+        /// </summary>
+        /// <param name="accountId">ID of the account to send to.</param>
+        /// <param name="stickerFileId">ID of the sticker to send.</param>
+        public async Task SendSticker(long accountId, string stickerFileId)
+        {
+            var chatId = new ChatId(accountId);
+            // TODO what if we feed a non-sticker file id here?
+            // what if id is garbage?
+            var sticker = new InputOnlineFile(stickerFileId);
+
+            await _client.SendStickerAsync(chatId, sticker);
+        }
+
+        /// <summary>
         /// Method to send predefined sticker on behalf of the bot.
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         public async Task SendTheSticker(long accountId)
-        {
-            var chatId = new ChatId(accountId);
-            await _client.SendStickerAsync(chatId, _sticker);
-        }
+            => await SendSticker(accountId, _theStickerID);
 
         private ParseMode? ResolveRequestParseMode(MessageParsingType fromRequest)
         {
