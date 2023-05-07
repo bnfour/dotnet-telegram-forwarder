@@ -25,7 +25,7 @@ namespace WebToTelegramCore.Services
         /// <summary>
         /// Field to store ID of the sticker to be used as an easter egg
         /// </summary>
-        private const string _theStickerID = "CAADAgADegkAAvFCvwXzqGCO6PM-zwI";
+        private const string _theStickerID = "CAACAgIAAxkBAAIBLWRXhjYCsdyPBbQaJNEJlbtzpVKLAAJ6CQAC8UK_BfOoYI7o8z7PLwQ";
 
         /// <summary>
         /// Wrapping of sticker ID understandable by the API. We're sending sticker
