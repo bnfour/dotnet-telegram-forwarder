@@ -189,6 +189,16 @@
         """;
 
         /// <summary>
+        /// Reply to a sticker message with its ID to use with the web API.
+        /// {0} is sticker's FileId
+        /// </summary>
+        public const string StickerId = """
+        This sticker's FileId is
+
+        `{0}`
+        """;
+
+        /// <summary>
         /// Template for message to reply to /token command with.
         /// {0} is token, {1} is API endpoint URL, {2} is vanity quote.
         /// </summary>

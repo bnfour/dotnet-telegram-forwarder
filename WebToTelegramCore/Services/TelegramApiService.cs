@@ -173,25 +173,20 @@ namespace WebToTelegramCore.Services
 
         /// <summary>
         /// Method to handle incoming sticker updates from the webhook.
-        /// Replies with an 
+        /// Replies with an ID to be used with the web API.
         /// </summary>
         /// <param name="update">Received update.</param>
         private async Task HandleSticker(Update update)
         {
             long? userId = update?.Message?.From?.Id;
-            // TODO do we need FileId or FileUniqueId?
-            string fileId = update?.Message.Sticker?.FileId;
-            string fileUniqueId = update?.Message.Sticker?.FileUniqueId;
+            string fileId = update?.Message?.Sticker?.FileId;
             // check if update contains everything we need to process it
-            // TODO breakpoint to check ids
-            if (userId == null
-                || (string.IsNullOrEmpty(fileId) && string.IsNullOrEmpty(fileUniqueId)))
+            if (userId == null || string.IsNullOrEmpty(fileId))
             {
                 return;
             }
-            // TODO format a template with a single id to send to the web API
-            // (actually make a template, determine which id to use)
-            await _bot.Send(userId.Value, "Okayeg eg", parsingType: Data.MessageParsingType.Plaintext);
+            var message = string.Format(Locale.StickerId, fileId);
+            await _bot.Send(userId.Value, message);
         }
     }
 }
