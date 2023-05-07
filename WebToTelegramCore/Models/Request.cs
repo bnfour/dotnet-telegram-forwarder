@@ -19,9 +19,16 @@ namespace WebToTelegramCore.Models
         /// <summary>
         /// Message to send. Max size is hardcoded to 4096 chars,
         /// same as Telegram's maximum length of a single message.
+        /// Mutually exclusive with <see cref="Sticker"/>.
         /// </summary>
-        [Required, StringLength(4096)]
+        [StringLength(4096)]
         public string Message { get; set; }
+
+        /// <summary>
+        /// Sticker file id. Mutually exclusive with <see cref="Message"/>.
+        /// </summary>
+        // TODO constraints like length and contents?
+        public string Sticker { get; set; }
 
         /// <summary>
         /// Optional parameter to suppress the notification for the
@@ -33,7 +40,8 @@ namespace WebToTelegramCore.Models
 
         /// <summary>
         /// Optional parameter to set parsing mode of the message.
-        /// Defaults to plaintext if not specified.
+        /// Only matters <see cref="Message"/> is present.
+        /// Defaults to plaintext if not specified. 
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public MessageParsingType Type { get; set; } = MessageParsingType.Plaintext;
