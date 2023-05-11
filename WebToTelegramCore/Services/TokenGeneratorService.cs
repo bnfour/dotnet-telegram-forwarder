@@ -52,10 +52,14 @@ namespace WebToTelegramCore.Services
         {
             string token = null;
             var done = false;
-            while (!done)
+            // let's pretend we're serious business just for a moment
+            using (var random = RandomNumberGenerator.Create())
             {
-                token = GenerateRandom();
-                done = !_context.Records.Any(r => r.Token == token);
+                while (!done)
+                {
+                    token = GenerateRandom(random);
+                    done = !_context.Records.Any(r => r.Token == token);
+                }
             }
             return token;
         }
@@ -63,15 +67,12 @@ namespace WebToTelegramCore.Services
         /// <summary>
         /// Actual token generation method.
         /// </summary>
+        /// <param name="random">A _secure_ random generator to use.</param>
         /// <returns>A completely random token.</returns>
-        private string GenerateRandom()
+        private string GenerateRandom(RandomNumberGenerator random)
         {
             var randomBytes = new byte[_tokenLength];
-            // let's pretend we're serious business for a moment
-            using (var random = RandomNumberGenerator.Create())
-            {
-                random.GetBytes(randomBytes);
-            }
+            random.GetBytes(randomBytes);
 
             var sb = new StringBuilder();
             foreach (var b in randomBytes)
