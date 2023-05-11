@@ -35,7 +35,7 @@ The next two parameters should be provided for a text notification:
 This parameter should be provided for a sticker notification:  
 * `sticker` is an internal Telegram ID of a sticker. For obtaining values to use, see [Sticker identification](#sticker-identification).  
 
-Providing both `message` and `sticker` and/or `type` and `sticker` at the same time is considered an invalid request.
+Providing both `message` and `sticker` at the same time is considered an invalid request. When `sticker` is present, `type` is ignored.  
 
 #### Response
 API returns an empty HTTP response with any of the following status codes:

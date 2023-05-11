@@ -29,8 +29,8 @@ namespace WebToTelegramCore.Controllers
         [HttpPost, Route("api")]
         public async Task<ActionResult> HandleWebApi([FromBody] Request request)
         {
-            // deny malformed requests
-            if (!ModelState.IsValid)
+            // deny malformed requests as detected by binder, or by "business" logic in here
+            if (!ModelState.IsValid || !IsValid(request))
             {
                 return BadRequest();
             }
@@ -47,7 +47,7 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
-            // if the formatting is malformed, relay Telegram's "bad request" to the user
+            // if markdown formatting or sticker ID is malformed, relay Telegram's "bad request" to the user
             catch (Telegram.Bot.Exceptions.ApiRequestException ex) when (ex.Message.StartsWith("Bad Request"))
             {
                 return BadRequest();
@@ -56,6 +56,24 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
+        }
+
+        // note that malformed markdown or invalid IDs are caught by Telegram backend,
+        // this merely checks that the fields are set correctly, not the contents
+
+        /// <summary>
+        /// Checks for validity not caught by model binder.
+        /// Assures that one of either <see cref="Request.Message"/>
+        /// or <see cref="Request.Sticker"/> is set.
+        /// </summary>
+        /// <param name="request">Request object.</param>
+        /// <returns>Whether the request is valid by its fields.</returns>
+        private bool IsValid(Request request)
+        {
+            var hasMessage = !string.IsNullOrEmpty(request.Message);
+            var hasSticker = !string.IsNullOrEmpty(request.Sticker);
+            // either a message or a sticker, not both, not neither
+            return hasMessage ^ hasSticker;
         }
     }
 }

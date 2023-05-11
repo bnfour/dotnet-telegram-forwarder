@@ -47,7 +47,16 @@ namespace WebToTelegramCore.Services
             var record = await _context.GetRecordByToken(request.Token) ?? throw new TokenNotFoundException();
             if (_recordService.CheckIfCanSend(record))
             {
-                await _bot.Send(record.AccountNumber, request.Message, request.Silent, request.Type);
+                // request with both message and sticker should be ignored earlier,
+                // but prefer text over sticker just in case
+                if (!string.IsNullOrEmpty(request.Message))
+                {
+                    await _bot.Send(record.AccountNumber, request.Message, request.Silent, request.Type);
+                }
+                else
+                {
+                    await _bot.SendSticker(record.AccountNumber, request.Sticker, request.Silent);
+                }
             }
             else
             {

@@ -21,6 +21,13 @@ namespace WebToTelegramCore.Interfaces
         Task Send(long accountId, string message, bool silent = false, MessageParsingType parsingType = MessageParsingType.Markdown);
 
         /// <summary>
+        /// Method to send an arbitrary sticker on behalf of the bot.
+        /// </summary>
+        /// <param name="accountId">ID of the account to send to.</param>
+        /// <param name="stickerFileId">ID of the sticker to send.</param>
+        Task SendSticker(long accountId, string stickerFileId, bool silent = false);
+
+        /// <summary>
         /// Sends a predefined sticker. Used as an easter egg with a 5% chance
         /// of message on unknown user input to be the sticker instead of text.
         /// </summary>
