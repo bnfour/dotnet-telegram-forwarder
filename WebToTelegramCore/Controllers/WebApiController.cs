@@ -47,7 +47,7 @@ namespace WebToTelegramCore.Controllers
             {
                 return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
-            // if the formatting is malformed, relay Telegram's "bad request" to the user
+            // if markdown formatting or sticker ID is malformed, relay Telegram's "bad request" to the user
             catch (Telegram.Bot.Exceptions.ApiRequestException ex) when (ex.Message.StartsWith("Bad Request"))
             {
                 return BadRequest();
