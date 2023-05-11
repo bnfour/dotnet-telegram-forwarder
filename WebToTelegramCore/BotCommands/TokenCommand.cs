@@ -37,7 +37,10 @@ namespace WebToTelegramCore.BotCommands
             "Of course I still love you",
             "それは何?",
             "There was nothing to be sad about",
-            "I never asked for this"
+            "I never asked for this",
+            "Everything in my life can unironically be solved with a full combo",
+            "Synchronization failed",
+            "Friends are so nice! heart"
         };
 
         /// <summary>
