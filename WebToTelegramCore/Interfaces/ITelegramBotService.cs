@@ -25,7 +25,7 @@ namespace WebToTelegramCore.Interfaces
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="stickerFileId">ID of the sticker to send.</param>
-        Task SendSticker(long accountId, string stickerFileId);
+        Task SendSticker(long accountId, string stickerFileId, bool silent = false);
 
         /// <summary>
         /// Sends a predefined sticker. Used as an easter egg with a 5% chance

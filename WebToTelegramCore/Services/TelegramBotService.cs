@@ -82,14 +82,15 @@ namespace WebToTelegramCore.Services
         /// </summary>
         /// <param name="accountId">ID of the account to send to.</param>
         /// <param name="stickerFileId">ID of the sticker to send.</param>
-        public async Task SendSticker(long accountId, string stickerFileId)
+        /// <param name="silent">Flag to set whether to suppress the notification.</param>
+        public async Task SendSticker(long accountId, string stickerFileId, bool silent = false)
         {
             var chatId = new ChatId(accountId);
             // TODO what if we feed a non-sticker file id here?
             // what if id is garbage?
             var sticker = new InputOnlineFile(stickerFileId);
 
-            await _client.SendStickerAsync(chatId, sticker);
+            await _client.SendStickerAsync(chatId, sticker, disableNotification: silent);
         }
 
         /// <summary>
