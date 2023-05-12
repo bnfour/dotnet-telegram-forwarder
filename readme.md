@@ -16,13 +16,14 @@ Has only one method to send the notification. Its endpoint listens for POST requ
 Request's body has this structure:
 ```json
 {
-    "token": string,
-    "silent": (optional) boolean,
+    "token": "string",
+    // optional boolean
+    "silent": false,
     // either these for text notification
-    "message": string,
-    "type": (optional) string,
+    "message": "string",
+    "type": "(optional) string",
     // or this for sticker notification
-    "sticker": string
+    "sticker": "string"
 }
 ```
 * `token` is this service's user identifier, randomly generated per Telegram user, can be changed and removed by the user. It's a 16 characters long string that may contain alphanumerics, and plus and equals signs (So `[0-9a-zA-Z+=]{16}`).  
