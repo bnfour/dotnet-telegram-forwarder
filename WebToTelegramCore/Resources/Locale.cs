@@ -149,7 +149,8 @@
         Other commands supported by bot include:
         \- /confirm and /cancel are used to prevent accidental deletions and regenerations;
         \- /help displays this message;
-        \- /about displays general info about this bot\.
+        \- /about displays general info about this bot;
+        \- Send any sticker to get its identifier\.
 
         \-\-bnfour
         """;
@@ -176,7 +177,7 @@
         public const string StartMessage = """
         Hello\!
 
-        This bot provides a standalone web API to relay messages from anything that can send web requests to Telegram as messages from the bot\.
+        This bot provides a standalone web API to relay messages \(text or stickers\) from anything that can send web requests to your Telegram inbox as messages from the bot\.
         
         *Please note*: this requires some external tools and knowledge\. If you consider "Send a POST request" a magic gibberish you don't understand, this bot probably isn't much of use to you\.
         """;
@@ -189,8 +190,19 @@
         """;
 
         /// <summary>
+        /// Reply to a sticker message with its ID to use with the web API.
+        /// {0} is sticker's FileId
+        /// </summary>
+        public const string StickerId = """
+        This sticker's FileId is
+
+        `{0}`
+        """;
+
+        /// <summary>
         /// Template for message to reply to /token command with.
-        /// {0} is token, {1} is API endpoint URL, {2} is vanity quote.
+        /// {0} is token, {1} is API endpoint URL, {2} is vanity quote,
+        /// {3} is vanity sticker id.
         /// </summary>
         // double braces are escaping for formatting
         public const string TokenTemplate = """
@@ -198,15 +210,23 @@
 
         `{0}`
 
-        *Usage:* To deliver a message, send a POST request to {1} with JSON body\. The payload must contain two parameters: your token and your message\. There are also optional parameters, please consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) for details\. Example of a payload:
+        *Usage:* To deliver a message, send a POST request to {1} with JSON body\. The payload must contain two parameters: the token and your message or sticker id\. See [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#request) for more settings\.
+        
+        Example of a text message payload:
         ```
         {{
             "token": "{0}",
             "message": "{2}"
         }}
         ```
-
-        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#web-api) to see error code list\.
+        Example of a sticker payload:
+        ```
+        {{
+            "token": "{0}",
+            "sticker": "{3}"
+        }}
+        ```
+        If everything is okay, the API will return a blank 200 OK response\. If something is not okay, a different status code will be returned\. Consult [the documentation](https://github.com/bnfour/dotnet-telegram-forwarder#response) to see error code list\.
         """;
     }
 }

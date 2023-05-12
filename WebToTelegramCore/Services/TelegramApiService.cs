@@ -90,16 +90,40 @@ namespace WebToTelegramCore.Services
         /// <param name="update">Received update.</param>
         public async Task HandleUpdate(Update update)
         {
-            // a few sanity checks:
-            // only handles text messages, hopefully commands
-            if (update.Message.Type != MessageType.Text)
+            // only handles either text messages, hopefully commands, or stickers
+            switch (update.Message.Type)
             {
-                return;
+                case MessageType.Text:
+                    await HandleTextMessage(update);
+                break;
+                case MessageType.Sticker:
+                    await HandleSticker(update);
+                break;
+                default:
+                    return;
             }
+        }
 
+        /// <summary>
+        /// Checks whether passed string is an actual bot token to verify the request
+        /// actully comes from Telegram backend.
+        /// </summary>
+        /// <param name="calledToken">Token received from request.</param>
+        /// <returns>True if calledToken is actual token, false otherwise.</returns>
+        public bool IsToken(string calledToken)
+        {
+            return calledToken.Equals(_token);
+        }
+
+        /// <summary>
+        /// Method to handle incoming text updates from the webhook.
+        /// </summary>
+        /// <param name="update">Received update.</param>
+        private async Task HandleTextMessage(Update update)
+        {
             long? userId = update?.Message?.From?.Id;
             string text = update?.Message?.Text;
-            // and the update contains everything we need to process it
+            // check if update contains everything we need to process it
             if (userId == null || string.IsNullOrEmpty(text))
             {
                 return;
@@ -113,6 +137,7 @@ namespace WebToTelegramCore.Services
             string commandText = text.Split(' ').FirstOrDefault();
             // will crash if multiple command classes share same text, who cares
             handler = _commands.SingleOrDefault(c => c.Command.Equals(commandText));
+
             if (handler != null)
             {
                 await _bot.Send(userId.Value, handler.Process(record));
@@ -121,17 +146,6 @@ namespace WebToTelegramCore.Services
             {
                 await HandleUnknownText(userId.Value, commandText);
             }
-        }
-
-        /// <summary>
-        /// Checks whether passed string is an actual bot token to verify the request
-        /// actully comes from Telegram backend.
-        /// </summary>
-        /// <param name="calledToken">Token received from request.</param>
-        /// <returns>True if calledToken is actual token, false otherwise.</returns>
-        public bool IsToken(string calledToken)
-        {
-            return calledToken.Equals(_token);
         }
 
         /// <summary>
@@ -155,6 +169,24 @@ namespace WebToTelegramCore.Services
                     : Locale.ErrorWhat;
                 await _bot.Send(accountId, reply);
             }
+        }
+
+        /// <summary>
+        /// Method to handle incoming sticker updates from the webhook.
+        /// Replies with an ID to be used with the web API.
+        /// </summary>
+        /// <param name="update">Received update.</param>
+        private async Task HandleSticker(Update update)
+        {
+            long? userId = update?.Message?.From?.Id;
+            string fileId = update?.Message?.Sticker?.FileId;
+            // check if update contains everything we need to process it
+            if (userId == null || string.IsNullOrEmpty(fileId))
+            {
+                return;
+            }
+            var message = string.Format(Locale.StickerId, fileId);
+            await _bot.Send(userId.Value, message);
         }
     }
 }

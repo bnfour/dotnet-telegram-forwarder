@@ -19,7 +19,7 @@ namespace WebToTelegramCore.BotCommands
         /// <summary>
         /// Random quotes to display as message example.
         /// </summary>
-        private readonly string[] _examples = new[]
+        private readonly string[] _textExamples = new[]
         {
             "Hello world!",
             "Timeline lost",
@@ -37,7 +37,20 @@ namespace WebToTelegramCore.BotCommands
             "Of course I still love you",
             "それは何?",
             "There was nothing to be sad about",
-            "I never asked for this"
+            "I never asked for this",
+            "Everything in my life can unironically be solved with a full combo",
+            "Synchronization failed",
+            "Friends are so nice! heart"
+        };
+
+        /// <summary>
+        /// Random sticker IDs to display as message example.
+        /// </summary>
+        private readonly string[] _stickerExamples = new[]
+        {
+            "CAACAgEAAxkBAAIBOGRXiFSUVC7ZsS_5q2TGB1-fpJhTAAIsEQACmX-IAgyEv_-IJmTBLwQ",
+            "CAACAgQAAxkBAAIBOmRXiFra2cpvwzCWA0QYoVkmSwTlAAKiAgACZsMpDOGLaU-TMrXqLwQ",
+            "CAACAgQAAxkBAAIBPGRXiGKI9bvYdPYccZJ2b0JZ-MrJAALLAANGp6MbBxkKM3Lb7egvBA",
         };
 
         /// <summary>
@@ -72,9 +85,13 @@ namespace WebToTelegramCore.BotCommands
         /// <returns>Message with token and API usage example.</returns>
         private string InternalProcess(Record record)
         {
-            var text = _examples[new Random().Next(0, _examples.Length)];
+            var random = new Random();
+            var text = _textExamples[random.Next(0, _textExamples.Length)];
+            var sticker = _stickerExamples[random.Next(0, _stickerExamples.Length)];
+            
             return String.Format(Locale.TokenTemplate, TelegramMarkdownFormatter.Escape(record.Token),
-                TelegramMarkdownFormatter.Escape(_apiEndpoint + "/api"), TelegramMarkdownFormatter.Escape(text));
+                TelegramMarkdownFormatter.Escape(_apiEndpoint + "/api"), TelegramMarkdownFormatter.Escape(text),
+                TelegramMarkdownFormatter.Escape(sticker));
         }
     }
 }

@@ -32,6 +32,9 @@ namespace WebToTelegramCore.BotCommands
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             // imagine having to escape dot for "markdown"
             var prettyVersion = $"{version.Major}\\.{version.Minor}";
+            #if DEBUG
+                prettyVersion += " debug";
+            #endif
             return base.Process(record) ?? String.Format(Locale.About, prettyVersion);
         }
     }
