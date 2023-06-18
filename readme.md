@@ -14,24 +14,23 @@ Has only one method to send the notification. Its endpoint listens for POST requ
 
 #### Request
 Request's body has this structure:
-```json
+```jsonc
 {
     "token": "string",
-    // optional boolean
-    "silent": false,
+    "silent": false, // optional
     // either these for text notification
     "message": "string",
-    "type": "(optional) string",
+    "type": "plaintext" | "markdown", // optional
     // or this for sticker notification
     "sticker": "string"
 }
 ```
 * `token` is this service's user identifier, randomly generated per Telegram user, can be changed and removed by the user. It's a 16 characters long string that may contain alphanumerics, and plus and equals signs (So `[0-9a-zA-Z+=]{16}`).  
-* `silent` is boolean to indicate whether them message from the bot in Telegram will come with a notification with sound. Behaves what you'd expect. If not supplied, defaults to `false`. Please note that the end user is able to mute the bot, effectively rendering this option useless.  
+* `silent` is boolean to indicate whether them message from the bot in Telegram will come with a notification with sound. Behaves what you'd expect. Optional parameter, if not supplied, defaults to `false`. Please note that the end user is able to mute the bot, effectively rendering this option useless.  
 
-These two parameters should be provided for a text notification:  
+These two parameters are used for a text notification:  
 * `message` is the text of the message to be sent via the bot. Maximum length is 4096 (also happens to be a maximum length of one Telegram message).  
-* `type` is used to select between two supported text parse modes: `"plaintext"` for plain text, and `"markdown"` for MarkdownV2 as described in [Telegram docs](https://core.telegram.org/bots/api#markdownv2-style). If value is not supplied, defaults to `"plaintext"`. These two are separated, because Telegram flavoured Markdown requires escaping for a fairly common plaintext punctuation marks, and will fail if not formed correctly.  
+* `type` is used to select between two supported text parse modes: `"plaintext"` for plain text, and `"markdown"` for MarkdownV2 as described in [Telegram docs](https://core.telegram.org/bots/api#markdownv2-style). Optional parameter, if value is not supplied, defaults to `"plaintext"`. These two are separated, because Telegram flavoured Markdown requires escaping for a fairly common plaintext punctuation marks, and will fail if not formed correctly.  
 
 This parameter should be provided for a sticker notification:  
 * `sticker` is an internal Telegram ID of a sticker. For obtaining values to use, see [Sticker identification](#sticker-identification).  
